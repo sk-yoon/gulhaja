@@ -16,7 +16,8 @@ const $ = require("jquery");
 // mariaDB Connect
 
 const maria = require("./db/maria");
-maria.__dirname;
+maria.connect();
+
 
 // 조회
 router.get("/ebook/select", function (req, res) {
