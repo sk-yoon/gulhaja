@@ -11,14 +11,14 @@ let currentPdfIndex = 0;
 let watchDog = 0
 
 async function renderCoverPage(pdfUrl, canvas) {
-  const pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
-  const firstPage = await pdfDoc.getPage(1);
-  const viewport = firstPage.getViewport({ scale: coverScale });
+  let pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+  let firstPage = await pdfDoc.getPage(1);
+  let viewport = firstPage.getViewport({ scale: coverScale });
 
   canvas.height = viewport.height;
   canvas.width = viewport.width;
 
-  const context = canvas.getContext("2d");
+  let context = canvas.getContext("2d");
 
   // Clear canvas
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -30,14 +30,14 @@ async function renderCoverPage(pdfUrl, canvas) {
 }
 
 async function renderPdfPage(pdfUrl, canvas, pageNumber) {
-  const pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
-  const page = await pdfDoc.getPage(pageNumber);
-  const viewport = page.getViewport({ scale: pageScale });
+  let pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+  let page = await pdfDoc.getPage(pageNumber);
+  let viewport = page.getViewport({ scale: pageScale });
 
   canvas.height = viewport.height;
   canvas.width = viewport.width;
 
-  const context = canvas.getContext("2d");
+  let context = canvas.getContext("2d");
 
   // Clear canvas
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -49,8 +49,8 @@ async function renderPdfPage(pdfUrl, canvas, pageNumber) {
 }
 
 async function switchPdf(data) {
-  const pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
-  const canvas = document.getElementById("pdf-cover");
+  let pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
+  let canvas = document.getElementById("pdf-cover");
 
   $("#title").text(data[currentPdfIndex].TITLE);
   $("#writer").text(data[currentPdfIndex].WRITER);
@@ -63,7 +63,7 @@ async function switchPdfPage(data) {
   let l_pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
   let l_even_canvas = document.getElementById("pdf-page");
 
-  const pdfDoc = await pdfjsLib.getDocument(l_pdfUrl).promise;
+  let pdfDoc = await pdfjsLib.getDocument(l_pdfUrl).promise;
 
   if (currentPage >= pdfDoc.numPages) {
     if ((currentPdfIndex + 1) != data.length){
