@@ -1,11 +1,13 @@
 const maria = require("mysql");
 
 const conn = maria.createConnection({
-  host: "localhost",
-  post: 3306,
+  host: "svc.sel5.cloudtype.app",
+  post: 32191,
   user: "gulhaja",
   password: "1234",
   database: "display",
+  connectionLimit: 1000,
+  waitForConnections: false
 });
 
 module.exports = conn;
