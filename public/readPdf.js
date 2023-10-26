@@ -5,7 +5,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 
 const coverScale = 0.4; // Adjust as needed
 const pageScale = 1; // Adjust as needed
-const intervalInSeconds = 2; // Interval to switch PDFs in seconds
+const intervalInSeconds = 1; // Interval to switch PDFs in seconds
 
 let currentPdfIndex = 0;
 
@@ -47,15 +47,9 @@ async function renderPdfPage(pdfUrl, canvas, pageNumber) {
   });
 }
 
-async function clearPdfPage(canvas) {
-  const context = canvas.getContext("2d");
-  context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
 async function switchPdf(data) {
-  const rootPath = document.location.origin;
-  const pdfUrl = rootPath + "/uploads/" + data[currentPdfIndex].FILENAME;
-  const canvas = document.getElementById("pdf-cover-canvas");
+  let pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
+  const canvas = document.getElementById("pdf-cover");
 
   $("#title").text(data[currentPdfIndex].TITLE);
   $("#writer").text(data[currentPdfIndex].WRITER);
@@ -65,16 +59,18 @@ async function switchPdf(data) {
 
 let currentPage = 0;
 async function switchPdfPage(data) {
-  const rootPath = document.location.origin;
-  var l_pdfUrl = rootPath + "/uploads/" + data[currentPdfIndex].FILENAME;
+  let l_pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
   data[currentPdfIndex]
 
-  var l_even_canvas = document.getElementById("pdf-canvas-even");
-  //var l_odd_canvas = document.getElementById("pdf-canvas-odd");
+  var l_even_canvas = document.getElementById("pdf-page");
   const pdfDoc = await pdfjsLib.getDocument(l_pdfUrl).promise;
 
   if (currentPage >= pdfDoc.numPages) {
-    currentPdfIndex = (currentPdfIndex + 1) % data.length; // Move to the next PDF file
+    if ((currentPdfIndex + 1) != data.length){
+      currentPdfIndex = (currentPdfIndex + 1) % data.length; // Move to the next PDF file
+    } else {
+      location.reload();
+    }
     await switchPdf(data);
     l_pdfUrl = rootPath + "/uploads/" + data[currentPdfIndex].FILENAME;
 
@@ -87,8 +83,8 @@ async function switchPdfPage(data) {
 }
 
 async function showPDF(data) {
-  await switchPdf(data);
-  await switchPdfPage(data);
+  switchPdfPage(data);
+  switchPdf(data);
 
   setInterval(async () => {
     switchPdfPage(data);

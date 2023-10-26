@@ -17,7 +17,7 @@
         </div>
       </div>
       <div>
-        <p><a href="./setting.html">setting</a></p>
+        <!--<p><a href="./setting.html">setting</a></p>-->
       </div>
     </nav>
 
@@ -36,10 +36,13 @@
             </a>
           </div>
           <hr />
-          <canvas id="pdf-cover-canvas" style="border: 1px solid black"></canvas>
+          <div class="list-group" id="div_cover">
+            <canvas id="pdf-cover"></canvas>
+          </div>
         </div>
-        <div class="col-9">
-          <canvas id="pdf-canvas-even" style="border: 2px solid black"></canvas>
+
+        <div class="col-9" id="div_page">
+          <canvas id="pdf-page" style="border: 2px solid black"></canvas>
         </div>
       </div>
 
