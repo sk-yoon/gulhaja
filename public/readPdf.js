@@ -8,6 +8,7 @@ const pageScale = 1; // Adjust as needed
 const intervalInSeconds = 1; // Interval to switch PDFs in seconds
 
 let currentPdfIndex = 0;
+let watchDog = 0
 
 async function renderCoverPage(pdfUrl, canvas) {
   const pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
@@ -48,7 +49,7 @@ async function renderPdfPage(pdfUrl, canvas, pageNumber) {
 }
 
 async function switchPdf(data) {
-  let pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
+  const pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
   const canvas = document.getElementById("pdf-cover");
 
   $("#title").text(data[currentPdfIndex].TITLE);
@@ -60,19 +61,23 @@ async function switchPdf(data) {
 let currentPage = 0;
 async function switchPdfPage(data) {
   let l_pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
-  data[currentPdfIndex]
+  let l_even_canvas = document.getElementById("pdf-page");
 
-  var l_even_canvas = document.getElementById("pdf-page");
   const pdfDoc = await pdfjsLib.getDocument(l_pdfUrl).promise;
 
   if (currentPage >= pdfDoc.numPages) {
     if ((currentPdfIndex + 1) != data.length){
       currentPdfIndex = (currentPdfIndex + 1) % data.length; // Move to the next PDF file
     } else {
-      location.reload();
+      if (watchDog < 10) {
+        currentPdfIndex = (currentPdfIndex + 1) % data.length; // Move to the next PDF file
+        watchDog += 1
+      } else {
+        location.reload();
+      }
     }
     await switchPdf(data);
-    l_pdfUrl = rootPath + "/uploads/" + data[currentPdfIndex].FILENAME;
+    l_pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
 
     currentPage = 1;
   } else {
