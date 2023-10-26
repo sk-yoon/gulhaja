@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>작가처럼 글하자</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><img src="../assets/img/new_main_logo2.png" style="width: 250px;"></a>
+        </div>
+      </div>
+      <div>
+        <p><a href="./setting.html">setting</a></p>
+      </div>
+    </nav>
+
+    <hr />
+
+    <div class="container-fluid">
+      <div class="row" style="width: 100%;">
+        
+        <div class="col-3">
+          <div class="list-group">
+            <a href="#" class="list-group-item">
+              <h4 class="list-group-item-heading" id="title"></h4>
+              <p class="list-group-item-text">
+                작가 : <span id="writer"></span>
+              </p>
+            </a>
+          </div>
+          <hr />
+          <canvas id="pdf-cover-canvas" style="border: 1px solid black"></canvas>
+        </div>
+        <div class="col-9">
+          <canvas id="pdf-canvas-even" style="border: 2px solid black"></canvas>
+        </div>
+      </div>
+
+      
+    </div>
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.js"></script>
+    <script src="readPdf.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        getEbookList();
+      });
+
+      function getEbookList() {
+        $.ajax({
+          type: "GET",
+          dataType: "JSON",
+          url: "/ebook/select",
+          success: function (ret) {
+            data = JSON.parse(JSON.stringify(ret));
+            showPDF(data);
+          },
+        });
+      }
+    </script>
+    
+  </body>
+</html>

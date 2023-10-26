@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>파일 업로드 테스트</title>
+
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="body">
+  <div class="div">
+    <h1>E-Book 표시 관리</h1>
+  </div>
+  
+  <hr>
+
+  <div class="div data">
+    <table id="myTable" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">순서</th>
+          <th scope="col">소속</th>
+          <th scope="col">학년</th>
+          <th scope="col">제목</th>
+          <th scope="col">작가</th>
+          <th scope="col">Filename</th>
+          <th scope="col">표시여부 (Y/N)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  
+
+  <hr>
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertEBookModal">
+    추가
+  </button>
+
+
+  <div class="modal fade" id="insertEBookModal" tabindex="-1" aria-labelledby="insertEBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="insertEBookModalLabel">Ebook 정보 입력</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <tr>
+              <td class="md-2">소속</td>
+              <td class="md-2"><input name="affiliation" /></td>
+              <td class="md-2">학년</td>
+              <td class="md-2"><input name="grade" /></td>
+            </tr>
+            <tr>
+              <td style="width: 12.5%">작가</td>
+              <td style="width: 37.5%"><input name="writer" /></td>
+              <td style="width: 12.5%">파일</td>
+              <td style="width: 37.5%"><input class="form-control" type="file" name="fileUpload" id="fileUpload"/></td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" action="/process/file">
+    <input type="file" name="file">
+    <input type="submit" name="submit" value="업로드">
+  </form>
+
+  <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      getEbookList();
+    });
+
+    function getEbookList() {
+        $.ajax({
+          type: "GET",
+          dataType: "JSON",
+          url: "/ebook/select",
+          success: function (ret) {
+            data = JSON.parse(JSON.stringify(ret));
+            htmlStr = drawTable(ret);
+            $("#myTable").find("tbody").html(htmlStr);
+          },
+        });
+      }
+
+      function drawTable(data) {
+        var tableHtml = "";
+        if (data.length > 0) {
+          for (var i = 0; i < data.length; i++) {
+            tableHtml += "<tr>";
+            tableHtml += "<td>" + data[i].ID + "</td>";
+            tableHtml += "<td>" + data[i].SEQ + "</td>";
+            tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
+            tableHtml += "<td>" + data[i].GRADE + "</td>";
+            tableHtml += "<td>" + data[i].TITLE + "</td>";
+            tableHtml += "<td>" + data[i].WRITER + "</td>";
+            tableHtml += "<td>" + data[i].FILENAME + "</td>";
+
+            var sel = "<td><select class='show_yn'>";
+            if (data[i].SHOW_YN == "Y") {
+              sel += "<option value='Y'>Y</option><option value='N'>N</option>";
+            } else {
+              sel += "<option value='N'>N</option><option value='Y'>Y</option>";
+            }
+            sel += "</select></td>";
+            tableHtml += sel;
+            tableHtml += `</tr>`;
+          }
+        } else {
+          alert("No Data");
+        }
+        return tableHtml;
+      }
+  </script>
+</body>
+</html>
