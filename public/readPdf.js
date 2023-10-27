@@ -3,9 +3,9 @@ const pdfjsLib = window["pdfjs-dist/build/pdf"];
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
 
-const coverScale = 0.4; // Adjust as needed
-const pageScale = 1; // Adjust as needed
-const intervalInSeconds = 1; // Interval to switch PDFs in seconds
+let coverScale = 0.4; // Adjust as needed
+let pageScale = 1; // Adjust as needed
+let intervalInSeconds = 1; // Interval to switch PDFs in seconds
 
 let currentPdfIndex = 0;
 let watchDog = 0

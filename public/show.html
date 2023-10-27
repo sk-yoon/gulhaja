@@ -55,8 +55,23 @@
     <script src="readPdf.js"></script>
     <script type="text/javascript">
       $(document).ready(function () {
-        getEbookList();
+        getConf();
       });
+
+      function getConf() {
+        
+        $.ajax({
+          type:"GET",
+          dataType:"JSON",
+          url:"/conf/get",
+          success: function (ret) {
+            intervalInSeconds = ret[0].PAGE_INTERVAL;
+            coverScale = ret[0].COVER_SCALE;
+            pageScale = ret[0].PAGE_SCALE;
+            getEbookList();
+          }
+        });
+      }
 
       function getEbookList() {
         $.ajax({

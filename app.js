@@ -31,6 +31,17 @@ router.get("/ebook/select", function (req, res) {
   });
 });
 
+router.get("/conf/get", function (req, res) {
+    maria.query("SELECT * FROM CONFIG", function (err, rows, fields) {
+        if (!err) {
+            res.send(rows);
+        } else {
+            console.log("err : " + err);
+            res.send(err);
+        }
+    });
+});
+
  
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
