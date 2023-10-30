@@ -7,7 +7,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
 
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/animate.css" />
+    <link rel="stylesheet" href="../assets/css/topbar_d.css">
   </head>
   <body><!-- Image and text -->
 
@@ -27,7 +29,6 @@
     
     <hr />
 
-    <!--<div class="container-fluid">-->
     <div class="container-fluid">
       <div class="row">
         <div class="col-1"></div>
@@ -52,9 +53,51 @@
         </div>
         <div class="col-1"></div>
       </div>
-
-      
     </div>
+
+    <footer class="footer-area fruits-footer">
+      <div class="footer">
+        <!--Content before waves-->
+        <div class="inner-header flex" style="height: 0px;">
+          <!--Just the logo.. Don't mind this-->
+          <div style="bottom: 0px;position: absolute;">
+            <div class="container">
+              <div class="row">
+                <div class="list-group">
+                  <p class="footer-p">대표자 : 구순영</p>
+                  <p class="footer-p">031-214-1275</p>
+                  <p class="footer-p">geulhaja@naver.com</p>
+                  <p></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Waves Container-->
+        <div style="transform: scaleY(-1);">
+          <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+              <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+            </defs>
+            <g class="parallax">
+              <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7"></use>
+              <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)"></use>
+              <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)"></use>
+              <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff"></use>
+            </g>
+          </svg>
+        </div>
+          <!--Waves end-->
+      </div>
+      <!--Header ends-->
+      <div class="food-copyright ptb-10" style="background: #050035;">
+        <div class="container text-center">
+          <p style="color: #fff;">Copyright © <a href=""> 글하자</a> 2023 . All Right Reserved.</p>
+        </div>
+      </div>
+    </footer>
+
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
