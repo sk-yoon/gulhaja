@@ -21,7 +21,14 @@ maria.connect();
 
 // 조회
 router.get("/ebook/select", function (req, res) {
-  maria.query("SELECT * FROM EBOOK ORDER BY SEQ", function (err, rows, fields) {
+  maria.query(
+        "SELECT \
+            B.ID, B.SEQ, B.TITLE, B.FILENAME, B.SHOW_YN, \
+            W.ID as W_ID, W.NAME, W.AFFILIATION, W.GRADE, W.WRITER_NO \
+        FROM EBOOK B \
+            RIGHT JOIN WRITTER W on B.WRITER_ID = W.ID \
+        ORDER BY SEQ;",
+    function (err, rows, fields) {
     if (!err) {
       res.send(rows);
     } else {

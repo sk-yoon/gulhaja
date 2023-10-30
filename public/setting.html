@@ -19,10 +19,10 @@
         <tr>
           <th scope="col">ID</th>
           <th scope="col">순서</th>
-          <th scope="col">소속</th>
-          <th scope="col">학년</th>
           <th scope="col">제목</th>
           <th scope="col">작가</th>
+          <th scope="col">소속</th>
+          <th scope="col">학년</th>
           <th scope="col">Filename</th>
           <th scope="col">표시여부 (Y/N)</th>
         </tr>
@@ -105,10 +105,10 @@
             tableHtml += "<tr>";
             tableHtml += "<td>" + data[i].ID + "</td>";
             tableHtml += "<td>" + data[i].SEQ + "</td>";
+            tableHtml += "<td>" + data[i].TITLE + "</td>";
+            tableHtml += "<td>" + data[i].WRITER_NO + ' ' + data[i].NAME + "</td>";
             tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
             tableHtml += "<td>" + data[i].GRADE + "</td>";
-            tableHtml += "<td>" + data[i].TITLE + "</td>";
-            tableHtml += "<td>" + data[i].WRITER + "</td>";
             tableHtml += "<td>" + data[i].FILENAME + "</td>";
 
             var sel = "<td><select class='show_yn'>";

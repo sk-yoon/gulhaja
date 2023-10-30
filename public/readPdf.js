@@ -52,8 +52,9 @@ async function switchPdf(data) {
   let pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
   let canvas = document.getElementById("pdf-cover");
 
+  $("#writeId").text(data[currentPdfIndex].WRITER_NO);
   $("#title").text(data[currentPdfIndex].TITLE);
-  $("#writer").text(data[currentPdfIndex].WRITER);
+  $("#writer").text(data[currentPdfIndex].NAME);
   $("#affilication").text(data[currentPdfIndex].AFFILIATION);
   $("#grade").text(data[currentPdfIndex].GRADE);
 
