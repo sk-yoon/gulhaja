@@ -21,6 +21,20 @@ create table EBOOK
 	FILE blob null
 );
 
+
+create table WRITTER
+(
+	ID int auto_increment primary key,
+	NAME varchar(100) null,
+	AFFILIATION nvarchar(100) null,
+	GRADE nvarchar(100) null,
+	WRITER_NO nvarchar(100) null
+);
+
+
+
+
+
 truncate table EBOOK;
 
 select * from EBOOK order by seq;

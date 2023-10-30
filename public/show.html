@@ -9,40 +9,48 @@
 
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
   </head>
-  <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#"><img src="../assets/img/new_main_logo2.png" style="width: 250px;"></a>
+  <body><!-- Image and text -->
+
+    <div class="navbar box-shadow">
+      <div class="container d-flex justify-content-between">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+          <img src="../assets/img/new_main_logo2.png" width="250px;" class="align-items-center">
+        </a>
+        <div class="align-items-center"><strong style="font-size: 40px;" id="">글하자 작가 1호</strong></div>
+        <div style="width: 250px;">
+          <button style="float: right;" class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
         </div>
       </div>
-      <div>
-        <!--<p><a href="./setting.html">setting</a></p>-->
-      </div>
-    </nav>
-
+    </div>
+    
     <hr />
 
+    <!--<div class="container-fluid">-->
     <div class="container-fluid">
       <div class="row" style="width: 100%;">
         
-        <div class="col-3">
+        <div class="col-2">
           <div class="list-group">
             <a href="#" class="list-group-item">
               <h4 class="list-group-item-heading" id="title"></h4>
               <p class="list-group-item-text">
                 작가 : <span id="writer"></span>
               </p>
+              <p class="list-group-item-text">
+                <span id="affilication"></span> <span id="grade"></span>
+              </p>
             </a>
           </div>
           <hr />
-          <div class="list-group" id="div_cover">
+          <div class="list-group">
             <canvas id="pdf-cover"></canvas>
           </div>
         </div>
 
-        <div class="col-9" id="div_page">
-          <canvas id="pdf-page" style="border: 2px solid black"></canvas>
+        <div class="col-10 list-group">
+          <canvas id="pdf-page"></canvas>
         </div>
       </div>
 

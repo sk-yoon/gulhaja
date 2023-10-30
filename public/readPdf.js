@@ -54,6 +54,8 @@ async function switchPdf(data) {
 
   $("#title").text(data[currentPdfIndex].TITLE);
   $("#writer").text(data[currentPdfIndex].WRITER);
+  $("#affilication").text(data[currentPdfIndex].AFFILIATION);
+  $("#grade").text(data[currentPdfIndex].GRADE);
 
   await renderCoverPage(pdfUrl, canvas);
 }
