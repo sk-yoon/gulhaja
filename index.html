@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <header>
+        <meta charset="UTF-8" />
+        <title>작가처럼 글하자</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="assets/css/animate.css" />
+        <link rel="stylesheet" href="assets/css/topbar_d.css">
+    </header>
+    <body>
+        <div class="navbar box-shadow">
+            <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <img src="assets/img/new_main_logo2.png" width="250px;" class="align-items-center">
+                </a>
+                <div class="align-items-center writeNo">
+                    <strong>글하자 작가&nbsp;&nbsp;&nbsp;</strong>
+                    <strong id="writeId"></strong>
+                    <!--<strong>&nbsp;&nbsp;호</strong>-->
+                </div>
+                <div style="width: 250px;">
+                    <button style="float: right;" class="navbar-toggler" type="button" onclick="location.href='/conf'">
+                        <i class="fa fa-bars navbar"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-2">
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading" id="title"></h4>
+                    <p class="list-group-item-text">
+                      작가 : <span id="writer"></span><br/>
+                      <span id="affilication"></span> <span id="grade"></span>
+                    </p>
+                  </a>
+                </div>
+                <hr />
+                <div class="list-group">
+                  <canvas id="pdf-cover"></canvas>
+                </div>
+              </div>
+      
+              <div class="col-8">
+                  <canvas id="pdf-page" style="height:100%;"></canvas>
+              </div>
+              <div class="col-1"></div>
+            </div>
+          </div>
+
+
+          <footer class="footer-area fruits-footer">
+            <div class="footer">
+                <!--Content before waves-->
+                <div class="inner-header flex" style="height: 0px;">
+                    <!--Just the logo.. Don't mind this-->
+                    <div style="bottom: 0px;position: absolute;">
+                        <div class="container">
+                            <div class="row">
+                                <div class="list-group">
+                                    <p class="footer-p">대표자 : 구순영</p>
+                                    <p class="footer-p">031-214-1275, 010-9700-1275</p>
+                                    <p class="footer-p">geulhaja@naver.com, gsy9020@naver.com</p>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Waves Container-->
+                <div style="transform: scaleY(-1);">
+                    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                        <defs>
+                            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                        </defs>
+                        <g class="parallax">
+                            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff"></use>
+                        </g>
+                    </svg>
+                </div>
+                <!--Waves end-->
+            </div>
+            <!--Header ends-->
+            <div class="food-copyright ptb-10" style="background: #050035;">
+                <div class="container text-center">
+                    <p style="color: #fff;">Copyright © <a href=""> 글하자</a> 2023 . All Right Reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+        <script src="assets/js/readPdf.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function () {
+            getConf();
+        });
+
+
+        function getConf() {        
+            $.ajax({
+                type:"GET",
+                dataType:"JSON",
+                url:"/data/conf",
+                success: function (ret) {
+                    intervalInSeconds = ret[0].PAGE_INTERVAL;
+                    coverScale = ret[0].COVER_SCALE;
+                    pageScale = ret[0].PAGE_SCALE;
+                    getEbookList();
+                }
+            });
+        }
+
+        function getEbookList() {
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: "/data/showEbooks",
+                success: function (ret) {
+                    data = JSON.parse(JSON.stringify(ret));
+                    showPDF(data);
+                }
+            });
+            }
+        </script>
+    </body>
+</html>

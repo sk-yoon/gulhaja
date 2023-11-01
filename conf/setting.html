@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="../assets/css/animate.css" />
+        <link rel="stylesheet" href="../assets/css/topbar_d.css">
+    </head>
+    <body>
+        <div class="navbar box-shadow">
+            <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <img src="../assets/img/new_main_logo2.png" width="250px;" class="align-items-center">
+                </a>
+                <div class="align-items-center writeNo">
+                    <strong>E-Book 파일 관리 및 작가 관리</strong>
+                </div>
+                <div style="width: 250px;">
+                    <button style="float: right;" class="navbar-toggler" type="button" onclick="location.href='/'">
+                        <i class="fa fa-home navbar"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="container">
+            <table id="myTable" class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">순서</th>
+                  <th scope="col">제목</th>
+                  <th scope="col">작가</th>
+                  <th scope="col">소속</th>
+                  <th scope="col">학년</th>
+                  <th scope="col">Filename</th>
+                  <th scope="col">표시여부 (Y/N)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertEBookModal">
+            추가
+          </button>
+
+          <div class="modal fade" id="insertEBookModal" tabindex="-1" aria-labelledby="insertEBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="insertEBookModalLabel">Ebook 정보 입력</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <table class="table table-striped">
+                    <tr>
+                      <td class="md-2">소속</td>
+                      <td class="md-2"><input name="affiliation" /></td>
+                      <td class="md-2">학년</td>
+                      <td class="md-2"><input name="grade" /></td>
+                    </tr>
+                    <tr>
+                      <td style="width: 12.5%">작가</td>
+                      <td style="width: 37.5%"><input name="writer" /></td>
+                      <td style="width: 12.5%">파일</td>
+                      <td style="width: 37.5%"><input class="form-control" type="file" name="fileUpload" id="fileUpload"/></td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                  </button>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <form method="post" enctype="multipart/form-data" action="/conf/uploadFile">
+            <input type="file" name="file">
+            <input type="submit" name="submit" value="업로드">
+        </form>
+
+
+        <footer class="footer-area fruits-footer">
+            <div class="footer">
+                <!--Content before waves-->
+                <div class="inner-header flex" style="height: 0px;">
+                    <!--Just the logo.. Don't mind this-->
+                    <div style="bottom: 0px;position: absolute;">
+                        <div class="container">
+                            <div class="row">
+                                <div class="list-group">
+                                    <p class="footer-p">대표자 : 구순영</p>
+                                    <p class="footer-p">031-214-1275, 010-9700-1275</p>
+                                    <p class="footer-p">geulhaja@naver.com, gsy9020@naver.com</p>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Waves Container-->
+                <div style="transform: scaleY(-1);">
+                    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                        <defs>
+                            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                        </defs>
+                        <g class="parallax">
+                            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)"></use>
+                            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff"></use>
+                        </g>
+                    </svg>
+                </div>
+                <!--Waves end-->
+            </div>
+            <!--Header ends-->
+            <div class="food-copyright ptb-10" style="background: #050035;">
+                <div class="container text-center">
+                    <p style="color: #fff;">Copyright © <a href=""> 글하자</a> 2023 . All Right Reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                getEbookList();
+            });
+
+            function getEbookList() {
+                $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: "/data/showEbooks",
+                success: function (ret) {
+                    data = JSON.parse(JSON.stringify(ret));
+                    htmlStr = drawTable(ret);
+                    $("#myTable").find("tbody").html(htmlStr);
+                },
+                });
+            }
+
+            function drawTable(data) {
+                var tableHtml = "";
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        tableHtml += "<tr>";
+                        tableHtml += "<td>" + data[i].ID + "</td>";
+                        tableHtml += "<td>" + data[i].SEQ + "</td>";
+                        tableHtml += "<td>" + data[i].TITLE + "</td>";
+                        tableHtml += "<td>" + data[i].WRITER_NO + ' ' + data[i].NAME + "</td>";
+                        tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
+                        tableHtml += "<td>" + data[i].GRADE + "</td>";
+                        tableHtml += "<td>" + data[i].FILENAME + "</td>";
+
+                        var sel = "<td><select class='show_yn'>";
+                        if (data[i].SHOW_YN == "Y") {
+                            sel += "<option value='Y'>Y</option><option value='N'>N</option>";
+                        } else {
+                            sel += "<option value='N'>N</option><option value='Y'>Y</option>";
+                        }
+                        sel += "</select></td>";
+                        tableHtml += sel;
+                        tableHtml += `</tr>`;
+                    }
+                } else {
+                    alert("No Data");
+                }
+                return tableHtml;
+            }
+        </script>
+    </body>
+</html>
