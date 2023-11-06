@@ -20,7 +20,7 @@
   font-size: 50px;
 }
 .footer {
-  height: 280px;
+  height: 260px;
   position:relative;
   text-align:center;
   background: linear-gradient(60deg, rgb(163 255 204) 0%, rgb(68 213 217) 100%);
@@ -39,7 +39,7 @@
 p.footer-p{
   color: #050035;
   margin-bottom: 0px;
-  font-size: 30px;
+  font-size: 26px;
 }
 
 img.menu-top-logo{
