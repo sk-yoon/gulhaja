@@ -4,6 +4,7 @@ var router = express.Router();
 const maria = require("../db/maria");        // mariaDB Connect
 maria.connect();
 
+router.use(express.json());
 
 router.get("/showEbooks", function(req, res) {
     maria.query(
@@ -23,6 +24,47 @@ router.get("/showEbooks", function(req, res) {
       res.send(err);
     }
   });
+});
+
+router.get("/writers", function(req,res) {
+    maria.query(
+        "SELECT * FROM WRITTER",function(err, rows, fields) {
+            if (!err) {
+                res.send(rows);
+            } else {
+                console.log("err : " + err);
+                res.send(err);
+            }
+    });
+});
+
+router.get("/writer", function(req,res) {
+    //console.log(req.query.name);
+    var sql = "SELECT * FROM WRITTER WHERE NAME LIKE '%" + req.query.name + "%'";
+    //console.log(sql);
+    maria.query(
+        sql, function(err, rows, fields) {
+            if (!err) {
+                res.send(rows);
+            } else {
+                console.log("err : " + err);
+                res.send(err);
+            }
+    });
+});
+
+router.post("/writer", function(req,res) {
+    var data = req.query;
+    console.log(data.name);
+    maria.query(
+        "SELECT * FROM WRITTER",function(err, rows, fields) {
+            if (!err) {
+                res.send(rows);
+            } else {
+                console.log("err : " + err);
+                res.send(err);
+            }
+    });
 });
 
 router.get("/conf", function (req, res) {

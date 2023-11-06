@@ -28,7 +28,7 @@ app.use(cors()); //ajax 요청시 CORS(다중서버접속) 지원
  
 var storage = multer.diskStorage({
     destination: function (req, file, callback){
-        callback(null, 'uploads/')
+        callback(null, './uploads')
     },
     filename: function (req, file, callback){
         callback(null, Date.now() + '-' + file.originalname )
@@ -47,29 +47,27 @@ router.get("/", function(req, res) {
     res.sendfile("conf/setting.html");
 });
 
-router.route('/uploadFile').post(upload.array('file', 1), function(req, res) {
+router.route('/uploadFile').post(upload.single('file'), function(req, res) {
     console.log('/uploadFile 호출됨');
     try {
-        var files = req.files;
+        var file = req.file;
         
         console.dir('#-----업로드된 파일 정보-----#')
-        console.dir(req.files[0]);
+        console.dir(req.file);
+        console.dir('#----- 같이 입력된 정보-----#')
+        console.dir(req.body.title);
+        console.dir(req.body.seq);
+        console.dir(req.body);
         var originalname = '', filename = '', mimetype = '', size = 0;
 
-        if(Array.isArray(files)){
-            console.log("배열 파일 갯수: %d", files.length);
-            
-            for(var i=0; i<files.length; i++){
-                originalname = files[i].originalname;
-                filename = files[i].filename;
-            }
-        }
-        
+        originalname = file.originalname;
+        filename = file.filename;
+
         res.writeHead('200', {
             'Content-Type': 'text/html;charset=utf8'
         });
-        res.write('<h1>업로드 성공</h1>');
-        res.write('<p>원본 파일이름: ' + originalname + '-> 저장 파일이름: ' + filename + '</p>');
+        //res.write('<h1>업로드 성공</h1>');
+        //res.write('<p>원본 파일이름: ' + originalname + '-> 저장 파일이름: ' + filename + '</p>');
         res.end();
     } catch(err) {
         console.dir(err.stack);
