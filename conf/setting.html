@@ -55,6 +55,11 @@
                 </div>
 
                 <div class="col-6">
+                    <div claa="row">
+                        <div id="sample">
+                            test
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-2">
                             <label>이름 검색 :</label>
@@ -137,35 +142,35 @@
                         <h5 class="modal-title" id="insertEBookModalLabel">작가 정보 입력</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-1"><label for="name" >이름</label></div>
-                                    <div class="col-5"><input class="form-control" id="name" /></div>
-                                    <div class="col-1"><label for="affilication" >학교</label></div>
-                                    <div class="col-5"><input class="form-control" id="affilication" /></div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-1"><label for="grade" >학년</label></div>
-                                    <div class="col-5"><input class="form-control" id="grade" /></div>
-                                    <div class="col-1"><label for="writerNo" >작가번호</label></div>
-                                    <div class="col-5"><input class="form-control" id="writerNo" /></div>
-                                </div>
+                        
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-1"><label for="name" >이름</label></div>
+                                        <div class="col-5"><input class="form-control" id="name" /></div>
+                                        <div class="col-1"><label for="affilication" >학교</label></div>
+                                        <div class="col-5"><input class="form-control" id="affilication" /></div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-1"><label for="grade" >학년</label></div>
+                                        <div class="col-5"><input class="form-control" id="grade" /></div>
+                                        <div class="col-1"><label for="writerNo" >작가번호</label></div>
+                                        <div class="col-5"><input class="form-control" id="writerNo" /></div>
+                                    </div>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            <button class="btn btn-primary" type="button" id="addWriter" >추가</button>
-                        </div>
-                    
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                <button class="btn btn-primary" type="button" id="addWriter" >추가</button>
+                            </div>
+                        
                 </div>
             </div>
         </div>
 
-        <footer class="footer-area fruits-footer">
+        <footer class="footer-area fruits-footer" style="position:absolute; bottom: 0px; width: 100%;">
             <div class="footer">
                 <!--Content before waves-->
                 <div class="inner-header flex" style="height: 0px;">
@@ -174,9 +179,9 @@
                         <div class="container">
                             <div class="row">
                                 <div class="list-group">
-                                    <p class="footer-p">대표자 : 구순영</p>
-                                    <p class="footer-p">031-214-1275, 010-9700-1275</p>
-                                    <p class="footer-p">geulhaja@naver.com, gsy9020@naver.com</p>
+                                    <p class="footer-p ptb-0">대표자 : 구순영</p>
+                                    <p class="footer-p ptb-0" id="phoneNum">031-214-1275, 010-9700-1275</p>
+                                    <p class="footer-p ptb-0" id="eMail">geulhaja@naver.com, gsy9020@naver.com</p>
                                     <p></p>
                                 </div>
                             </div>
@@ -186,7 +191,7 @@
 
                 <!--Waves Container-->
                 <div style="transform: scaleY(-1);">
-                    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                    <svg class="waves" viewBox="0 24 100 28" preserveAspectRatio="none" shape-rendering="auto">
                         <defs>
                             <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
                         </defs>
@@ -199,12 +204,6 @@
                     </svg>
                 </div>
                 <!--Waves end-->
-            </div>
-            <!--Header ends-->
-            <div class="food-copyright ptb-10" style="background: #050035;">
-                <div class="container text-center">
-                    <p style="color: #fff;">Copyright © <a href=""> 글하자</a> 2023 . All Right Reserved.</p>
-                </div>
             </div>
         </footer>
 
@@ -277,20 +276,24 @@
             });
 
             $("#addWriter").click(function() {
+                
                 var data = {
-                        name : $("#name").val(),
-                        affiliation : $("#affilication").val(),
-                        grade : $("#grade").val(),
-                        writeNo : $("#writerNo").val()
-                    };
-                $.ajax({
-                    type: "POST",
-                    data: {"test": "ddd"},
-                    dataType: "JSON",
-                    url: "/data/writer",
-                    success: function (ret) {
-                        alert( JSON.stringify(dat) );
-                    },
+                    name : $("#name").val(),
+                    affiliation : $("#affilication").val(),
+                    grade : $("#grade").val(),
+                    writeNo : $("#writerNo").val()
+                };
+                data = JSON.stringify(data);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/data/writer');
+                xhr.setRequestHeader('Content-type', "application/json");
+                xhr.send(data);
+
+                xhr.addEventListener('load', function () {
+                    console.log(xhr.responseText);
+                    alert(xhr.responseText);
+                    document.querySelector("#sample").innerHTML = xhr.responseText;
                 });
             });
 

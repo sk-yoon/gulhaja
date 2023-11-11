@@ -54,15 +54,20 @@ router.get("/writer", function(req,res) {
 });
 
 router.post("/writer", function(req,res) {
-    var data = req.query;
-    console.log(data.name);
+    var body = req.body;
+    var params = [body.name, body.affiliation, body.grade, body.writeNo];
+
+    var sql = "INSERT INTO WRITTER (NAME,  AFFILIATION, GRADE,  WRITER_NO)    \
+            VALUES (?, ?, ?, ?);";
+    var insertSql = maria.format(sql, params);
+
     maria.query(
-        "SELECT * FROM WRITTER",function(err, rows, fields) {
+        insertSql, function(err, rows, fields) {
             if (!err) {
-                res.send(rows);
+                return res.json("추가 성공");
             } else {
                 console.log("err : " + err);
-                res.send(err);
+                return res.json(err);
             }
     });
 });
