@@ -19,6 +19,11 @@
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 40px;
 }
+
+.rowColumn {
+  color:brown;
+}
+
 .footer {
   height: 250px;
   position:relative;

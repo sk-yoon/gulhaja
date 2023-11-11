@@ -57,7 +57,7 @@
                 <div class="col-6">
                     <div claa="row">
                         <div id="sample">
-                            test
+                            
                         </div>
                     </div>
                     <div class="row">
@@ -84,6 +84,7 @@
                                 <th>소속</th>
                                 <th>학년</th>
                                 <th>작가번호</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -211,10 +212,26 @@
         <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript">
+
             $(document).ready(function () {
                 getEbookList();
                 getWriterList();
             });
+
+            $(document).on("dblclick", ".rowColumn", testfun );
+            $(document).on("click", "button[name='delWriter']", delWriter );
+
+            function testfun (event) {
+                if (this.contentEditable == 'false') {
+                    console.log('test');
+                    this.contentEditable = true;
+
+                } else {
+                    console.log(this.contentEditable);
+                }
+            }
+
+            
 
             function getEbookList() {
                 $.ajax({
@@ -276,7 +293,6 @@
             });
 
             $("#addWriter").click(function() {
-                
                 var data = {
                     name : $("#name").val(),
                     affiliation : $("#affilication").val(),
@@ -318,10 +334,11 @@
                     for (var i = 0; i < data.length; i++) {
                         tableHtml += "<tr>";
                         tableHtml += "<td>" + data[i].ID + "</td>";
-                        tableHtml += "<td>" + data[i].NAME + "</td>";
+                        tableHtml += "<td class='rowColumn' contenteditable='false' data-default='" + data[i].NAME  +"'>" + data[i].NAME + "</td>";
                         tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
                         tableHtml += "<td>" + data[i].GRADE + "</td>";
                         tableHtml += "<td>" + data[i].WRITER_NO + "</td>";
+                        tableHtml += "<td><button name='delWriter' class='btn btn-sm btn-danger' value='" + data[i].ID + "'>삭제</button></td>";
                         tableHtml += `</tr>`;
                         selHtml += "<option value='" + data[i].NAME + "'>" + data[i].WRITER_NO + "호 작가" + data[i].NAME + "</option>";
                     }
@@ -330,8 +347,26 @@
                 }
                 html[0] = tableHtml;
                 html[1] = selHtml;
+
                 return html;
             }
+
+            function delWriter (event) {
+                var data = {id:$(this).val()};
+                data = JSON.stringify(data);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('DELETE', '/data/writer');
+                xhr.setRequestHeader('Content-type', "application/json");
+                xhr.send(data);
+
+                xhr.addEventListener('load', function () {
+                    console.log(xhr.responseText);
+                    alert(xhr.responseText);
+                });
+            }
+            
+            
         </script>
     </body>
 </html>

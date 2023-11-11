@@ -72,6 +72,23 @@ router.post("/writer", function(req,res) {
     });
 });
 
+router.delete("/writer", function(req, res) {
+    var id = req.body.id;
+
+    var sql = "DELETE FROM WRITTER WHERE ID = ?";
+    var delSql = maria.format(sql, id);
+
+    maria.query(
+        delSql, function(err, rows, fields) {
+            if (!err) {
+                return res.json("삭제 성공");
+            } else {
+                console.log("err : " + err);
+                return res.json(err);
+            }
+    });
+});
+
 router.get("/conf", function (req, res) {
     maria.query("SELECT * FROM CONFIG", function (err, rows, fields) {
         if (!err) {
