@@ -114,9 +114,9 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-1"><label for="title" >제목</label></div>
-                                <div class="col-5"><input class="form-control" name="title" /></div>
+                                <div class="col-5"><input class="form-control" id="eBooktitle" /></div>
                                 <div class="col-1"><label for="seq" >순서</label></div>
-                                <div class="col-5"><input class="form-control" name="seq" /></div>
+                                <div class="col-5"><input class="form-control" id="eBookseq" /></div>
                             </div>
                             
                             <div class="row">
@@ -140,7 +140,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <input class="btn btn-primary" type="submit" name="submit" />
+                        <input class="btn btn-primary" type="submit" id="addEbook" />
                     </div>
                 </div>
             </div>
@@ -330,6 +330,13 @@
                 });
             });
 
+            $("#addEbook").click(function(e) {
+                var dat = {
+                    seq : $("#eBookseq").val()
+                }
+                alert(JSON.stringify(dat));
+            });
+
             function getWriterList() {
                 $.ajax({
                     type: "GET",
@@ -366,7 +373,7 @@
 
             $('#writer_name').on('keydown', function(e){
                 if (e.code == 'Enter'){
-                    $('.loginBtn').click()
+                    getWriter();
                 }
             });
 
