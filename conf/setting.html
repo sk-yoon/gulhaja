@@ -48,9 +48,13 @@
 
             <div class="row">
                 <div class="col-6">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#insertEBookModal">추가</button>
+                    <h4>환경 설정</h4>
+                    <div class="input-group">
+                        <label class="input-group-text" for="intervalSec">PDF 파일 표시 시간</label>
+                        <select id="intervalSec" class="form-select">
+                        </select>
                     </div>
+                    
 
                 </div>
 
@@ -236,6 +240,33 @@
                     console.log(this.contentEditable);
                 }
             }
+
+            function getConf() {        
+                $.ajax({
+                    type:"GET",
+                    dataType:"JSON",
+                    url:"/data/conf",
+                    success: function (ret) {
+                        drawIntervalSel(ret[0].PAGE_INTERVAL);
+                        //intervalInSeconds = ret[0].PAGE_INTERVAL;
+                        //coverScale = ret[0].COVER_SCALE;
+                        //pageScale = ret[0].PAGE_SCALE;
+                    }
+                });
+            }
+
+            function drawIntervalSel(interval) {
+                let sel = $('#intervalSec');
+                for (let i = 1; i <= 20; i++) {
+                    const option = $('<option value="' + i + '">' + i + '</option>');
+                    sel.append(option);
+                }
+                sel.val(interval);
+            }
+
+            $("#intervalSec").change(function(event) {
+                alert('change');
+            });
 
             function getEbookList() {
                 $.ajax({
