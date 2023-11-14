@@ -104,35 +104,40 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <form method="post" enctype="multipart/form-data" action="/conf/uploadFile" target="_blank">
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-1"><label for="title" >제목</label></div>
-                                    <div class="col-5"><input class="form-control" name="title" /></div>
-                                    <div class="col-1"><label for="seq" >순서</label></div>
-                                    <div class="col-5"><input class="form-control" name="seq" /></div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-1">작가</div>
-                                    <div class="col-5">
-                                        <input class="form-control" name="writerName" placeholder="작가 검색 ..">
-                                        <datalist id="writerName" name="writerName"></datalist>
-                                    </div>
-                                    <div class="col-1">파일</div>
-                                    <div class="col-5 custom-file">
-                                        <input class="form-control" type="file" name="file">
-                                    </div>
-                                </div>
-
+                    <!--<form method="post" enctype="multipart/form-data" action="/conf/uploadFile" target="_blank">-->
+                    
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-1"><label for="title" >제목</label></div>
+                                <div class="col-5"><input class="form-control" name="title" /></div>
+                                <div class="col-1"><label for="seq" >순서</label></div>
+                                <div class="col-5"><input class="form-control" name="seq" /></div>
                             </div>
+                            
+                            <div class="row">
+                                <div class="col-1">작가</div>
+                                <div class="col-5">
+                                    <button id="searchEBookWriter">test</button>
+                                    <input class="form-control" name="writerName" placeholder="작가 검색 .." id="ebookWriter">
+                                    <datalist id="writerName" name="writerName"></datalist>
+                                </div>
+                                <div class="col-1">파일</div>
+                                <div class="col-5 custom-file">
+                                    <form action="javascript:void(0)" method="post" id="fileupload">
+                                        <input class="form-control" style="float: left; width: 80%;" type="file" name="file">
+                                        <input class="form-control" style="float: left; width: 20%;" type="submit" value="업로드">
+                                    </form>
+                                    <p id="fileUploadResult">피일을 업로드해주세요</p>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            <input class="btn btn-primary" type="submit" name="submit" />
-                        </div>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <input class="btn btn-primary" type="submit" name="submit" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,18 +237,16 @@
                 }
             }
 
-            
-
             function getEbookList() {
                 $.ajax({
-                type: "GET",
-                dataType: "JSON",
-                url: "/data/showEbooks",
-                success: function (ret) {
-                    data = JSON.parse(JSON.stringify(ret));
-                    htmlStr = drawShowListTable(ret);
-                    $("#showList").find("tbody").html(htmlStr);
-                },
+                    type: "GET",
+                    dataType: "JSON",
+                    url: "/data/showEbooks",
+                    success: function (ret) {
+                        data = JSON.parse(JSON.stringify(ret));
+                        htmlStr = drawShowListTable(ret);
+                        $("#showList").find("tbody").html(htmlStr);
+                    },
                 });
             }
 
@@ -276,22 +279,101 @@
                 return tableHtml;
             }
 
+            $("#searchEBookWriter").click(function() {
+                $.ajax({
+                    type: "GET",
+                    data:{"name": $("#ebookWriter").val()},
+                    dataType: "JSON",
+                    url: "/data/writer",
+                    success: function (ret) {
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                selHtml += "<option value='" + data[i].NAME + "'>" + data[i].WRITER_NO + "호 작가" + data[i].NAME + "</option>";
+                            }
+                        } else {
+                            selHtml += "<option>검색 결과 없음</option>";
+                        }
+                    },
+                });
+            });
+
+            $("#fileupload").submit(function() {
+                const formData = new FormData(this);
+                formData.append("upload_dir", "/uploads");
+                // 서버로 데이터를 전송
+                $.ajax({
+                    url: "/conf/uploadFile",
+                    type: "post",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        alert(data.message);
+                        $("#fileUploadResult").text(data.message);
+                    },
+                    error: function(error) {
+                    // 실패 시 처리
+                    },
+                });
+            });
+
             function getWriterList() {
                 $.ajax({
                     type: "GET",
                     dataType: "JSON",
                     url: "/data/writers",
                     success: function (ret) {
-                        html = drawWritersHtml(ret);
-                        $("#writerlst").find("tbody").html(html[0]);
+                        var htmlStr = drawWritersHtml(ret);
+                        $("#writerlst").find("tbody").html(htmlStr);
                         
                     },
                 });
             }
 
+            function drawWritersHtml(data) {
+                var tableHtml = "";
+                
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        tableHtml += "<tr>";
+                        tableHtml += "<td>" + data[i].ID + "</td>";
+                        tableHtml += "<td class='rowColumn' contenteditable='false' data-default='" + data[i].NAME  +"'>" + data[i].NAME + "</td>";
+                        tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
+                        tableHtml += "<td>" + data[i].GRADE + "</td>";
+                        tableHtml += "<td>" + data[i].WRITER_NO + "</td>";
+                        tableHtml += "<td><button name='delWriter' class='btn btn-sm btn-danger' value='" + data[i].ID + "'>삭제</button></td>";
+                        tableHtml += `</tr>`;
+                    }
+                } else {
+                    tableHtml = "<td colspan='6'>검색 결과 없음</td>";
+                }
+
+                return tableHtml;
+            }
+
+            $('#writer_name').on('keydown', function(e){
+                if (e.code == 'Enter'){
+                    $('.loginBtn').click()
+                }
+            });
+
             $("#searchWriter").click(function() {
                 getWriter();
             });
+
+            function getWriter() {
+                $.ajax({
+                    type: "GET",
+                    data:{"name": $("#writer_name").val()},
+                    dataType: "JSON",
+                    url: "/data/writer",
+                    success: function (ret) {
+                        var htmlStr = drawWritersHtml(ret);
+                        $("#writerlst").find("tbody").html(htmlStr);
+                    },
+                });
+            }
 
             $("#addWriter").click(function() {
                 var data = {
@@ -313,44 +395,6 @@
                     document.querySelector("#sample").innerHTML = xhr.responseText;
                 });
             });
-
-            function getWriter() {
-                $.ajax({
-                    type: "GET",
-                    data:{"name": $("#writer_name").val()},
-                    dataType: "JSON",
-                    url: "/data/writer",
-                    success: function (ret) {
-                        html = drawWritersHtml(ret);
-                        $("#writerlst").find("tbody").html(html[0]);
-                    },
-                });
-            }
-
-            function drawWritersHtml(data) {
-                var html = []
-                var tableHtml = "";
-                var selHtml =""
-                if (data.length > 0) {
-                    for (var i = 0; i < data.length; i++) {
-                        tableHtml += "<tr>";
-                        tableHtml += "<td>" + data[i].ID + "</td>";
-                        tableHtml += "<td class='rowColumn' contenteditable='false' data-default='" + data[i].NAME  +"'>" + data[i].NAME + "</td>";
-                        tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
-                        tableHtml += "<td>" + data[i].GRADE + "</td>";
-                        tableHtml += "<td>" + data[i].WRITER_NO + "</td>";
-                        tableHtml += "<td><button name='delWriter' class='btn btn-sm btn-danger' value='" + data[i].ID + "'>삭제</button></td>";
-                        tableHtml += `</tr>`;
-                        selHtml += "<option value='" + data[i].NAME + "'>" + data[i].WRITER_NO + "호 작가" + data[i].NAME + "</option>";
-                    }
-                } else {
-                    alert("<td colspan='5'>No Data</td>");
-                }
-                html[0] = tableHtml;
-                html[1] = selHtml;
-
-                return html;
-            }
 
             function delWriter (event) {
                 var data = {id:$(this).val()};

@@ -63,9 +63,12 @@ router.route('/uploadFile').post(upload.single('file'), function(req, res) {
         originalname = file.originalname;
         filename = file.filename;
 
-        res.writeHead('200', {
-            'Content-Type': 'text/html;charset=utf8'
-        });
+        res.send({
+            message: "파일 업로드가 완료되었습니다.",
+          });
+        //res.writeHead('200', {
+         //   'Content-Type': 'text/html;charset=utf8'
+        //});
         //res.write('<h1>업로드 성공</h1>');
         //res.write('<p>원본 파일이름: ' + originalname + '-> 저장 파일이름: ' + filename + '</p>');
         res.end();
