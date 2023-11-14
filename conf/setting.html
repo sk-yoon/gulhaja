@@ -181,42 +181,6 @@
             </div>
         </div>
 
-        <footer class="footer-area fruits-footer" style="position:absolute; bottom: 0px; width: 100%;">
-            <div class="footer">
-                <!--Content before waves-->
-                <div class="inner-header flex" style="height: 0px;">
-                    <!--Just the logo.. Don't mind this-->
-                    <div style="bottom: 0px;position: absolute;">
-                        <div class="container">
-                            <div class="row">
-                                <div class="list-group">
-                                    <p class="footer-p ptb-0">대표자 : 구순영</p>
-                                    <p class="footer-p ptb-0" id="phoneNum">031-214-1275, 010-9700-1275</p>
-                                    <p class="footer-p ptb-0" id="eMail">geulhaja@naver.com, gsy9020@naver.com</p>
-                                    <p></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--Waves Container-->
-                <div style="transform: scaleY(-1);">
-                    <svg class="waves" viewBox="0 24 100 28" preserveAspectRatio="none" shape-rendering="auto">
-                        <defs>
-                            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
-                        </defs>
-                        <g class="parallax">
-                            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7"></use>
-                            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)"></use>
-                            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)"></use>
-                            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff"></use>
-                        </g>
-                    </svg>
-                </div>
-                <!--Waves end-->
-            </div>
-        </footer>
 
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
@@ -224,8 +188,10 @@
         <script type="text/javascript">
 
             $(document).ready(function () {
+                getConf();
                 getEbookList();
                 getWriterList();
+                writerTest();
             });
 
             $(document).on("dblclick", ".rowColumn", testfun );
@@ -248,7 +214,6 @@
                     url:"/data/conf",
                     success: function (ret) {
                         drawIntervalSel(ret[0].PAGE_INTERVAL);
-                        //intervalInSeconds = ret[0].PAGE_INTERVAL;
                         //coverScale = ret[0].COVER_SCALE;
                         //pageScale = ret[0].PAGE_SCALE;
                     }
@@ -262,6 +227,22 @@
                     sel.append(option);
                 }
                 sel.val(interval);
+            }
+
+            function writerTest () {
+                $.ajax({
+                    type: "GET",
+                    dataType: "JSON",
+                    url: "/data/writers",
+                    success: function (ret) {
+                        var htmlStr = drawWritersHtml(ret);
+                        var datalist = $("#datalistOptions");
+                        for (let i = 0; i <= ret.length; i++) {
+                            const option = $('<option value="' + ret[i].ID + '">' + ret[i].WRITER_NO + '호 작가'+ ret[i].NAME + '</option>');
+                            datalist.append(option);
+                        }
+                    },
+                });
             }
 
             $("#intervalSec").change(function(event) {
