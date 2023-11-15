@@ -101,8 +101,8 @@ router.get("/conf", function (req, res) {
 });
 
 router.put("/conf/set", function (req, res) {
-    const body = req.body;
-    const keys = Object.keys(body);
+    var body = req.body;
+    var keys = Object.keys(body);
 
     if (keys.length == 0) {
         console.log("key length : " + keys.length);
