@@ -12,7 +12,7 @@ router.get("/showEbooks", function(req, res) {
             B.ID, B.SEQ, B.TITLE, B.FILENAME, B.SHOW_YN, \
             W.ID as W_ID, W.NAME, W.AFFILIATION, W.GRADE, W.WRITER_NO \
         FROM EBOOK B \
-            RIGHT JOIN WRITTER W on B.WRITER_ID = W.ID \
+            LEFT JOIN WRITTER W on B.WRITER_ID = W.ID \
         WHERE \
             B.SHOW_YN = 'Y' \
         ORDER BY SEQ;",
