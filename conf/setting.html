@@ -128,14 +128,14 @@
                             <div class="row">
                                 <div class="col-1">작가</div>
                                 <div class="col-5">
-                                    <input class="form-control" style="float: left; width: 60%;" id="ebookWriter" placeholder="작가 검색 .." id="ebookWriter">
+                                    <input class="form-control" style="float: left; width: 60%;" id="eBookWriter" placeholder="작가 검색 ..">
                                     <input class="form-control" style="float: left; width: 20%;" disabled id="writerID">
-                                    <input class="form-control" style="float: left; width: 20%;" type="button" value="검색">
+                                    <input class="form-control" style="float: left; width: 20%;" type="button" value="검색" id="getEBookWriter">
                                 </div>
                                 <div class="col-1">파일</div>
                                 <div class="col-5 custom-file">
                                     <form action="javascript:void(0)" method="post" id="fileupload">
-                                        <input class="form-control" style="float: left; width: 80%;" type="file" name="file">
+                                        <input class="form-control" style="float: left; width: 80%;" type="file" name="file" id="eBookFilename">
                                         <input class="form-control" style="float: left; width: 20%;" type="submit" value="업로드">
                                     </form>
                                     <p id="fileUploadResult">피일을 업로드해주세요</p>
@@ -192,6 +192,8 @@
         <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             var g_PageInterval;
+            var g_coverScale;
+            var g_pageScale;
 
             $(document).ready(function () {
                 getConf();
@@ -219,9 +221,9 @@
                     url:"/data/conf",
                     success: function (ret) {
                         g_PageInterval = ret[0].PAGE_INTERVAL;
+                        g_coverScale = ret[0].COVER_SCALE;
+                        g_pageScale = ret[0].PAGE_SCALE;
                         drawIntervalSel(g_PageInterval);
-                        //coverScale = ret[0].COVER_SCALE;
-                        //pageScale = ret[0].PAGE_SCALE;
                     }
                 });
             }
@@ -283,7 +285,7 @@
                         tableHtml += "<td>" + data[i].GRADE + "</td>";
                         tableHtml += "<td>" + data[i].FILENAME + "</td>";
 
-                        var sel = "<td><select class='show_yn'>";
+                        var sel = "<td><select class='form-select' >";
                         if (data[i].SHOW_YN == "Y") {
                             sel += "<option value='Y'>Y</option><option value='N'>N</option>";
                         } else {
@@ -299,19 +301,20 @@
                 return tableHtml;
             }
 
-            $("#searchEBookWriter").click(function() {
+            function changeShowYn(event) {
+                alert($(this));
+            }
+
+            $("#getEBookWriter").click(function() {
                 $.ajax({
                     type: "GET",
-                    data:{"name": $("#ebookWriter").val()},
+                    data:{"name": $("#eBookWriter").val()},
                     dataType: "JSON",
                     url: "/data/writer",
                     success: function (ret) {
-                        if (data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                selHtml += "<option value='" + data[i].NAME + "'>" + data[i].WRITER_NO + "호 작가" + data[i].NAME + "</option>";
-                            }
-                        } else {
-                            selHtml += "<option>검색 결과 없음</option>";
+                        if(ret.length == 1) {
+                            $("#writerID").val(ret[0].ID);
+                            $("#eBookWriter").val(ret[0].WRITER_NO + '호 작가 ' + ret[0].NAME);
                         }
                     },
                 });
@@ -339,10 +342,30 @@
             });
 
             $("#addEbook").click(function(e) {
-                var dat = {
-                    seq : $("#eBookseq").val()
+                let writeId = $("#writerID").val();
+                //if(writeId == null || writeId == '') {
+                //    alert('작가를 검색하세요');
+                //}
+                let filePath = $("#eBookFilename").val();
+                let fileName = filePath.split("\\").pop();
+
+                var data = {
+                    seq : $("#eBookseq").val(),
+                    title : $("#eBooktitle").val(),
+                    writerId : $("#writerID").val(),
+                    filename : fileName
                 }
-                alert(JSON.stringify(dat));
+                data = JSON.stringify(data);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/data/eBook');
+                xhr.setRequestHeader('Content-type', "application/json");
+                xhr.send(data);
+
+                xhr.addEventListener('load', function () {
+                    console.log(xhr.responseText);
+                    alert(xhr.responseText);
+                });
             });
 
             function getWriterList() {

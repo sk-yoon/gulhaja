@@ -26,6 +26,17 @@ router.get("/showEbooks", function(req, res) {
   });
 });
 
+router.post("/eBook", function(req, res) {
+    var body = req.body;
+    var params = [body.seq, body.title, body.writerId, body.filename];
+
+    var sql = "INSERT INTO EBOOK (SEQ, TITLE, WRITER_ID, FILENAME, SHOW_YN) \
+            VALUES(?, ?, ?, ?, 'N');";
+    var insertSql = maria.format(sql, params);
+
+    return res.json(insertSql);
+});
+
 router.get("/writers", function(req,res) {
     maria.query(
         "SELECT * FROM WRITTER",function(err, rows, fields) {
