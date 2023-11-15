@@ -100,6 +100,32 @@ router.get("/conf", function (req, res) {
     });
 });
 
+router.put("/conf/set", function (req, res) {
+    const body = req.body;
+    const keys = Object.keys(body);
+
+    if (keys.length == 0) {
+        console.log("key length : " + keys.length);
+        return res.send("환경 변수 설정값이 없습니다. Error!");
+    }
+    
+    let sql = "UPDATE CONFIG SET ";
+
+    for (const key of Object.keys(body)) {
+        if(key == "interval") {
+            sql += "PAGE_INTERVAL = " + body.interval;
+        }
+    }
+
+    maria.query(sql, function (err, rows, fields) {
+        if (!err) {
+            return res.json("변경 성공");
+        } else {
+            console.log("err : " + err);
+            return res.send(err);
+        }
+    });
+});
 
 
 

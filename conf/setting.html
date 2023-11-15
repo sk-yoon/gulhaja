@@ -45,6 +45,14 @@
                       </table>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-10">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#insertEBookModal">추가</button>
+                </div>
+            </div>
+            <hr>
 
             <div class="row">
                 <div class="col-6">
@@ -54,8 +62,6 @@
                         <select id="intervalSec" class="form-select">
                         </select>
                     </div>
-                    
-
                 </div>
 
                 <div class="col-6">
@@ -122,9 +128,9 @@
                             <div class="row">
                                 <div class="col-1">작가</div>
                                 <div class="col-5">
-                                    <button id="searchEBookWriter">test</button>
-                                    <input class="form-control" name="writerName" placeholder="작가 검색 .." id="ebookWriter">
-                                    <datalist id="writerName" name="writerName"></datalist>
+                                    <input class="form-control" style="float: left; width: 60%;" id="ebookWriter" placeholder="작가 검색 .." id="ebookWriter">
+                                    <input class="form-control" style="float: left; width: 20%;" disabled id="writerID">
+                                    <input class="form-control" style="float: left; width: 20%;" type="button" value="검색">
                                 </div>
                                 <div class="col-1">파일</div>
                                 <div class="col-5 custom-file">
@@ -154,29 +160,28 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                         
-                            <div class="modal-body">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-1"><label for="name" >이름</label></div>
-                                        <div class="col-5"><input class="form-control" id="name" /></div>
-                                        <div class="col-1"><label for="affilication" >학교</label></div>
-                                        <div class="col-5"><input class="form-control" id="affilication" /></div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-1"><label for="grade" >학년</label></div>
-                                        <div class="col-5"><input class="form-control" id="grade" /></div>
-                                        <div class="col-1"><label for="writerNo" >작가번호</label></div>
-                                        <div class="col-5"><input class="form-control" id="writerNo" /></div>
-                                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-1"><label for="name" >이름</label></div>
+                                <div class="col-5"><input class="form-control" id="name" /></div>
+                                <div class="col-1"><label for="affilication" >학교</label></div>
+                                <div class="col-5"><input class="form-control" id="affilication" /></div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-1"><label for="grade" >학년</label></div>
+                                <div class="col-5"><input class="form-control" id="grade" /></div>
+                                <div class="col-1"><label for="writerNo" >작가번호</label></div>
+                                <div class="col-5"><input class="form-control" id="writerNo" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button class="btn btn-primary" type="button" id="addWriter" >추가</button>
+                    </div>
 
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                <button class="btn btn-primary" type="button" id="addWriter" >추가</button>
-                            </div>
-                        
                 </div>
             </div>
         </div>
@@ -186,12 +191,12 @@
         <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript">
+            var g_PageInterval;
 
             $(document).ready(function () {
                 getConf();
                 getEbookList();
                 getWriterList();
-                writerTest();
             });
 
             $(document).on("dblclick", ".rowColumn", testfun );
@@ -213,7 +218,8 @@
                     dataType:"JSON",
                     url:"/data/conf",
                     success: function (ret) {
-                        drawIntervalSel(ret[0].PAGE_INTERVAL);
+                        g_PageInterval = ret[0].PAGE_INTERVAL;
+                        drawIntervalSel(g_PageInterval);
                         //coverScale = ret[0].COVER_SCALE;
                         //pageScale = ret[0].PAGE_SCALE;
                     }
@@ -229,24 +235,26 @@
                 sel.val(interval);
             }
 
-            function writerTest () {
-                $.ajax({
-                    type: "GET",
-                    dataType: "JSON",
-                    url: "/data/writers",
-                    success: function (ret) {
-                        var htmlStr = drawWritersHtml(ret);
-                        var datalist = $("#datalistOptions");
-                        for (let i = 0; i <= ret.length; i++) {
-                            const option = $('<option value="' + ret[i].ID + '">' + ret[i].WRITER_NO + '호 작가'+ ret[i].NAME + '</option>');
-                            datalist.append(option);
-                        }
-                    },
-                });
-            }
-
             $("#intervalSec").change(function(event) {
-                alert('change');
+                let ret = confirm("페이지 표시시간을 " + g_PageInterval + "초에서 " + $(this).val() + "초로 변경하시겠습니까?");
+                if(ret) {
+                    g_PageInterval = $(this).val();
+                    let data = {interval: g_PageInterval};
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('PUT', '/data/conf/set');
+                    xhr.setRequestHeader('Content-type', "application/json");
+                    xhr.send(data);
+
+                    xhr.addEventListener('load', function () {
+                        console.log(xhr.responseText);
+                        alert(xhr.responseText);
+                    });
+
+                } else {
+                    $(this).val(g_PageInterval);
+                }
             });
 
             function getEbookList() {
