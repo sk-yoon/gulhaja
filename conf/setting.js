@@ -31,7 +31,7 @@ var storage = multer.diskStorage({
         callback(null, './uploads')
     },
     filename: function (req, file, callback){
-        callback(null, Date.now() + '-' + file.originalname )
+        callback(null, file.originalname )
     }
 });
  
@@ -39,7 +39,7 @@ var upload = multer({
     storage: storage,
     limits: {
         files: 10, //파일개수제한 10개
-        fileSize: 1024 * 1024 * 1024 //파일크기제한 1GB
+        fileSize: 20 * 1024 * 1024 //파일크기제한 20MB
     }
 });
 

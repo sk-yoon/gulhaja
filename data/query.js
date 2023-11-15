@@ -26,6 +26,24 @@ router.get("/showEbooks", function(req, res) {
   });
 });
 
+router.get("/ebooks", function(req, res) {
+    maria.query(
+        "SELECT \
+            B.ID, B.SEQ, B.TITLE, B.FILENAME, B.SHOW_YN, \
+            W.ID as W_ID, W.NAME, W.AFFILIATION, W.GRADE, W.WRITER_NO \
+        FROM EBOOK B \
+            LEFT JOIN WRITTER W on B.WRITER_ID = W.ID \
+        ORDER BY SEQ;",
+    function (err, rows, fields) {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log("err : " + err);
+      res.send(err);
+    }
+  });
+});
+
 router.post("/eBook", function(req, res) {
     var body = req.body;
     var params = [body.seq, body.title, body.writerId, body.filename];
@@ -33,8 +51,15 @@ router.post("/eBook", function(req, res) {
     var sql = "INSERT INTO EBOOK (SEQ, TITLE, WRITER_ID, FILENAME, SHOW_YN) \
             VALUES(?, ?, ?, ?, 'N');";
     var insertSql = maria.format(sql, params);
-
-    return res.json(insertSql);
+    maria.query(
+        insertSql, function(err, rows, fields) {
+            if (!err) {
+                return res.json("추가 성공");
+            } else {
+                console.log("err : " + err);
+                return res.json(err);
+            }
+    });
 });
 
 router.get("/writers", function(req,res) {

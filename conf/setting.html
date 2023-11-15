@@ -62,6 +62,15 @@
                         <select id="intervalSec" class="form-select">
                         </select>
                     </div>
+                    <div>
+                        <!--
+                        <label for="eBookWriterList" class="form-label"></label>
+                        <input class="form-control" list="eBookWriter" id="eBookWriterList" placeholder="Type to search..." style="float: left; width: 60%;" >
+                        <datalist id="eBookWriter"></datalist>
+                        <input class="form-control" style="float: left; width: 20%;" disabled id="writerID">
+                        <input class="form-control" style="float: left; width: 20%;" type="button" value="검색" id="getEBookWriter">
+                        -->
+                    </div>
                 </div>
 
                 <div class="col-6">
@@ -124,11 +133,14 @@
                                 <div class="col-1"><label for="seq" >순서</label></div>
                                 <div class="col-5"><input class="form-control" id="eBookseq" /></div>
                             </div>
+                            <hr>
                             
                             <div class="row">
                                 <div class="col-1">작가</div>
                                 <div class="col-5">
-                                    <input class="form-control" style="float: left; width: 60%;" id="eBookWriter" placeholder="작가 검색 ..">
+                                    <label for="eBookWriterList" class="form-label"></label>
+                                    <input class="form-control" list="eBookWriter" id="eBookWriterList" placeholder="작가 검색하세요..." style="float: left; width: 60%;" >
+                                    <datalist id="eBookWriter"></datalist>
                                     <input class="form-control" style="float: left; width: 20%;" disabled id="writerID">
                                     <input class="form-control" style="float: left; width: 20%;" type="button" value="검색" id="getEBookWriter">
                                 </div>
@@ -263,7 +275,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "JSON",
-                    url: "/data/showEbooks",
+                    url: "/data/ebooks",
                     success: function (ret) {
                         data = JSON.parse(JSON.stringify(ret));
                         htmlStr = drawShowListTable(ret);
@@ -308,16 +320,28 @@
             $("#getEBookWriter").click(function() {
                 $.ajax({
                     type: "GET",
-                    data:{"name": $("#eBookWriter").val()},
+                    data:{"name": $("#eBookWriterList").val()},
                     dataType: "JSON",
                     url: "/data/writer",
                     success: function (ret) {
                         if(ret.length == 1) {
                             $("#writerID").val(ret[0].ID);
                             $("#eBookWriter").val(ret[0].WRITER_NO + '호 작가 ' + ret[0].NAME);
+                        } else if(ret.length > 1) {
+                            for(let i = 0; i < ret.length; i++) {
+                                let str = "<option value='" + ret[i].NAME + "'>" + ret[i].WRITER_NO + "호 작가" + "</option>";
+                                $("#eBookWriter").append(str);
+                            }
+                            alert('동명 이인이 있습니다.');
+                        } else {
+                            alert('검색 결과가 없습니다.')
                         }
                     },
                 });
+            });
+
+            $("#eBookWriter").change(function(e) {
+                alert($(this).val());
             });
 
             $("#fileupload").submit(function() {
