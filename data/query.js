@@ -72,6 +72,9 @@ router.put("/eBook", function(req,res) {
         case "title":
             sql += "TITLE";
             break;
+        case "showYN":
+            sql += "SHOW_YN";
+            break;
         defalut:
             break;
     }

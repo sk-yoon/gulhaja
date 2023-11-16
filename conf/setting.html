@@ -210,6 +210,7 @@
             $(document).on("dblclick", ".rowColumn", enableEdit );
             $(document).on("keyup", ".rowColumn", changeWriter );
             $(document).on("blur", ".rowColumn", outOfForcus );
+            $(document).on("change", ".showYN", changeShowYN );
             $(document).on("click", "button[name='delWriter']", delWriter );
 
             function getConf() {        
@@ -284,11 +285,11 @@
                         tableHtml += "<td>" + data[i].GRADE + "</td>";
                         tableHtml += "<td>" + data[i].FILENAME + "</td>";
 
-                        var sel = "<td><select class='form-select' >";
+                        var sel = "<td><select class='form-select showYN' data-default='";
                         if (data[i].SHOW_YN == "Y") {
-                            sel += "<option value='Y'>Y</option><option value='N'>N</option>";
+                            sel += "Y'><option value='Y'>Y</option><option value='N'>N</option>";
                         } else {
-                            sel += "<option value='N'>N</option><option value='Y'>Y</option>";
+                            sel += "N'><option value='N'>N</option><option value='Y'>Y</option>";
                         }
                         sel += "</select></td>";
                         tableHtml += sel;
@@ -300,8 +301,25 @@
                 return tableHtml;
             }
 
-            function changeShowYn(event) {
-                alert($(this));
+            function changeShowYN(event) {
+                const oldValue = $(this).attr('data-default');
+
+                let data = {
+                    id : $(this).parent().parent().children().first().text(),
+                    column : "showYN",
+                    newData : $(this).val()
+                }
+                data = JSON.stringify(data);
+                
+                var xhr = new XMLHttpRequest();
+                    xhr.open('PUT', "/data/eBook");
+                    xhr.setRequestHeader('Content-type', "application/json");
+                    xhr.send(data);
+
+                    xhr.addEventListener('load', function () {
+                        console.log(xhr.responseText);
+                        alert(xhr.responseText);
+                    });
             }
 
             $("#getEBookWriter").click(function() {
@@ -486,7 +504,7 @@
             function outOfForcus(e) {
                 let url = "/data/" + $(this).parent().parent().attr("name");
                 let orgVal = $(this).attr("data-default");
-                let newVal = $(this).text();
+                var newVal = $(this).text();
 
                 if (newVal != orgVal) {
                     this.contentEditable = false;
