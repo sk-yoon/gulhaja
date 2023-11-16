@@ -62,6 +62,33 @@ router.post("/eBook", function(req, res) {
     });
 });
 
+router.put("/eBook", function(req,res) {
+    var body = req.body;
+    let sql = "UPDATE EBOOK SET ";
+    switch(body.column) {
+        case "seq":
+            sql += "SEQ";
+            break;
+        case "title":
+            sql += "TITLE";
+            break;
+        defalut:
+            break;
+    }
+    sql += "= ? WHERE ID = " + body.id;
+    var updateSql = maria.format(sql, body.newData);
+
+    maria.query(
+        updateSql, function(err, rows, fields) {
+            if (!err) {
+                return res.json("변경 성공");
+            } else {
+                console.log("err : " + err);
+                return res.json(err);
+            }
+    });
+});
+
 router.get("/writers", function(req,res) {
     maria.query(
         "SELECT * FROM WRITTER",function(err, rows, fields) {
@@ -85,6 +112,39 @@ router.get("/writer", function(req,res) {
             } else {
                 console.log("err : " + err);
                 res.send(err);
+            }
+    });
+});
+
+router.put("/writer", function(req,res) {
+    var body = req.body;
+    let sql = "UPDATE WRITTER SET ";
+    switch(body.column) {
+        case "name":
+            sql += "NAME";
+            break;
+        case "affiliation":
+            sql += "AFFILIATION";
+            break;
+        case "grade":
+            sql += "GRADE";
+            break;
+        case "writeNo":
+            sql += "WRITER_NO";
+            break;
+        defalut:
+            break;
+    }
+    sql += "= ? WHERE ID = " + body.id;
+    var updateSql = maria.format(sql, body.newData);
+
+    maria.query(
+        updateSql, function(err, rows, fields) {
+            if (!err) {
+                return res.json("변경 성공");
+            } else {
+                console.log("err : " + err);
+                return res.json(err);
             }
     });
 });
@@ -162,7 +222,5 @@ router.put("/conf/set", function (req, res) {
         }
     });
 });
-
-
 
 module.exports = router;

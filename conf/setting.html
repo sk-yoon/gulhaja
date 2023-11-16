@@ -41,7 +41,7 @@
                                 <th scope="col">표시여부 (Y/N)</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody name="eBook"></tbody>
                       </table>
                 </div>
             </div>
@@ -63,13 +63,7 @@
                         </select>
                     </div>
                     <div>
-                        <!--
-                        <label for="eBookWriterList" class="form-label"></label>
-                        <input class="form-control" list="eBookWriter" id="eBookWriterList" placeholder="Type to search..." style="float: left; width: 60%;" >
-                        <datalist id="eBookWriter"></datalist>
-                        <input class="form-control" style="float: left; width: 20%;" disabled id="writerID">
-                        <input class="form-control" style="float: left; width: 20%;" type="button" value="검색" id="getEBookWriter">
-                        -->
+
                     </div>
                 </div>
 
@@ -106,7 +100,7 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody name="writer"></tbody>
                     </table>
                 </div>
             </div>
@@ -213,18 +207,10 @@
                 getWriterList();
             });
 
-            $(document).on("dblclick", ".rowColumn", testfun );
+            $(document).on("dblclick", ".rowColumn", enableEdit );
+            $(document).on("keyup", ".rowColumn", changeWriter );
+            $(document).on("blur", ".rowColumn", outOfForcus );
             $(document).on("click", "button[name='delWriter']", delWriter );
-
-            function testfun (event) {
-                if (this.contentEditable == 'false') {
-                    console.log('test');
-                    this.contentEditable = true;
-
-                } else {
-                    console.log(this.contentEditable);
-                }
-            }
 
             function getConf() {        
                 $.ajax({
@@ -286,12 +272,13 @@
 
             function drawShowListTable(data) {
                 var tableHtml = "";
+                let attrStr = "class='rowColumn' contenteditable='false' data-default='";
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         tableHtml += "<tr>";
                         tableHtml += "<td>" + data[i].ID + "</td>";
-                        tableHtml += "<td>" + data[i].SEQ + "</td>";
-                        tableHtml += "<td>" + data[i].TITLE + "</td>";
+                        tableHtml += "<td key='seq' " + attrStr + data[i].SEQ + "'>" + data[i].SEQ + "</td>";
+                        tableHtml += "<td key='title' " + attrStr + data[i].TITLE + "'>" + data[i].TITLE + "</td>";
                         tableHtml += "<td>" + data[i].WRITER_NO + ' ' + data[i].NAME + "</td>";
                         tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
                         tableHtml += "<td>" + data[i].GRADE + "</td>";
@@ -324,10 +311,14 @@
                     dataType: "JSON",
                     url: "/data/writer",
                     success: function (ret) {
+                        $("#eBookWriter").empty();
+                        $("#writerID").val('');
+
                         if(ret.length == 1) {
                             $("#writerID").val(ret[0].ID);
-                            $("#eBookWriter").val(ret[0].WRITER_NO + '호 작가 ' + ret[0].NAME);
+                            $("#eBookWriterList").val(ret[0].WRITER_NO + '호 작가 ' + ret[0].NAME);
                         } else if(ret.length > 1) {
+                            $("#eBookWriter").empty();
                             for(let i = 0; i < ret.length; i++) {
                                 let str = "<option value='" + ret[i].NAME + "'>" + ret[i].WRITER_NO + "호 작가" + "</option>";
                                 $("#eBookWriter").append(str);
@@ -340,8 +331,8 @@
                 });
             });
 
-            $("#eBookWriter").change(function(e) {
-                alert($(this).val());
+            $("#eBookWriterList").change(function(e) {
+                alert('ㄴㅇㄹ' + $(this).select().text());
             });
 
             $("#fileupload").submit(function() {
@@ -407,15 +398,15 @@
 
             function drawWritersHtml(data) {
                 var tableHtml = "";
-                
+                let attrStr = "class='rowColumn' contenteditable='false' data-default='";
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         tableHtml += "<tr>";
                         tableHtml += "<td>" + data[i].ID + "</td>";
-                        tableHtml += "<td class='rowColumn' contenteditable='false' data-default='" + data[i].NAME  +"'>" + data[i].NAME + "</td>";
-                        tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
-                        tableHtml += "<td>" + data[i].GRADE + "</td>";
-                        tableHtml += "<td>" + data[i].WRITER_NO + "</td>";
+                        tableHtml += "<td key='name' " + attrStr + data[i].NAME  +"'>" + data[i].NAME + "</td>";
+                        tableHtml += "<td key='affiliation'" + attrStr + data[i].AFFILIATION + "'>" + data[i].AFFILIATION + "</td>";
+                        tableHtml += "<td key='grade'" + attrStr + data[i].GRADE + "'>" + data[i].GRADE + "</td>";
+                        tableHtml += "<td key='writeNo'" + attrStr + data[i].WRITER_NO + "'>" + data[i].WRITER_NO + "</td>";
                         tableHtml += "<td><button name='delWriter' class='btn btn-sm btn-danger' value='" + data[i].ID + "'>삭제</button></td>";
                         tableHtml += `</tr>`;
                     }
@@ -426,7 +417,7 @@
                 return tableHtml;
             }
 
-            $('#writer_name').on('keydown', function(e){
+            $('#writer_name').on('keyup', function(e){
                 if (e.code == 'Enter'){
                     getWriter();
                 }
@@ -466,11 +457,10 @@
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
                     alert(xhr.responseText);
-                    document.querySelector("#sample").innerHTML = xhr.responseText;
                 });
             });
 
-            function delWriter (event) {
+            function delWriter (e) {
                 var data = {id:$(this).val()};
                 data = JSON.stringify(data);
 
@@ -485,7 +475,49 @@
                 });
             }
             
-            
+            function enableEdit (event) {
+                if (this.contentEditable == 'false') {
+                    this.contentEditable = true;
+                } else {
+                    console.log(this.contentEditable);
+                }
+            }
+
+            function outOfForcus(e) {
+                let url = "/data/" + $(this).parent().parent().attr("name");
+                let orgVal = $(this).attr("data-default");
+                let newVal = $(this).text();
+
+                if (newVal != orgVal) {
+                    this.contentEditable = false;
+                    let data = {
+                        id : $(this).parent().children().first().text(),
+                        column : $(this).attr("key"),
+                        newData : newVal
+                    }
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('PUT', url);
+                    xhr.setRequestHeader('Content-type', "application/json");
+                    xhr.send(data);
+
+                    xhr.addEventListener('load', function () {
+                        console.log(xhr.responseText);
+                        alert(xhr.responseText);
+                    });
+                }
+            }
+
+            function changeWriter(e) {
+                if (e.code == "Escape") {
+                    let orgVal = $(this).attr("data-default");
+                    $(this).text(orgVal);
+                    this.contentEditable = false;
+                } else if (e.code == 'Enter') {
+                    this.contentEditable = false;
+                }
+            }
         </script>
     </body>
 </html>
