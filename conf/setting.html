@@ -37,7 +37,7 @@
                                 <th scope="col">작가</th>
                                 <th scope="col">소속</th>
                                 <th scope="col">학년</th>
-                                <th scope="col">Filename</th>
+                                <th scope="col">파일명(업로드시 영어로)</th>
                                 <th scope="col">표시여부 (Y/N)</th>
                             </tr>
                         </thead>
@@ -322,7 +322,22 @@
                     });
             }
 
+            $("#eBookWriterList").on('keydown', function(e){
+                if (e.code == 'Enter'){
+                    isEnterPressed = true;
+                    getEBookWriter();
+                }
+            });
+
+            $("#eBookWriterList").on('keyup', function(e){
+                isEnterPressed = false;
+            });
+
             $("#getEBookWriter").click(function() {
+                getEBookWriter();
+            });
+
+            function getEBookWriter(e) {
                 $.ajax({
                     type: "GET",
                     data:{"name": $("#eBookWriterList").val()},
@@ -347,10 +362,10 @@
                         }
                     },
                 });
-            });
+            }
 
             $("#eBookWriterList").change(function(e) {
-                alert('ㄴㅇㄹ' + $(this).select().text());
+                //alert('ㄴㅇㄹ' + $(this).select().text());
             });
 
             $("#fileupload").submit(function() {
