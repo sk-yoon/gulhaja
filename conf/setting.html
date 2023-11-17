@@ -27,6 +27,10 @@
 
         <div class="container">
             <div class="row">
+                <div class="col-12"><h4>E-Book 목록</h4></div>
+            </div>
+            <hr>
+            <div class="row">
                 <div class="col-12">
                     <table id="showList" class="table table-striped table-bordered">
                         <thead>
@@ -47,63 +51,71 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-10">
+                <div class="col-11">
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#insertEBookModal">추가</button>
                 </div>
             </div>
-            <hr>
-
+            <br><br><br><br><br>
             <div class="row">
                 <div class="col-6">
-                    <h4>환경 설정</h4>
-                    <div class="input-group">
-                        <label class="input-group-text" for="intervalSec">PDF 파일 표시 시간</label>
-                        <select id="intervalSec" class="form-select">
-                        </select>
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
-
-                <div class="col-6">
-                    <div claa="row"></div>
                     <div class="row">
+                        <div class="col-12">
+                            <h4>환경 설정</h4>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <label class="input-group-text" for="intervalSec">PDF 파일 표시 시간</label>
+                                <select id="intervalSec" class="form-select">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6"></div>
+                    </div>
+                </div><!-- 3번째 Row 중 왼쪽 col-6 End -->
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>작가 목록</h4>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" type="text" id="writer_name" placeholder="이름으로 검색하세요..."/>
+                        </div>
                         <div class="col-2">
-                            <label>이름 검색 :</label>
-                        </div>
-                        <div class="col-4">
-                            <input class="form-control" type="text" id="writer_name" />
-                        </div>
-                        <div class="col-4">
                             <button class="btn btn-outline-secondary" id="searchWriter">검색</button>
                         </div>
-                        <div class="col-2 right">
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <table id="writerlst" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>이름</th>
+                                    <th>소속</th>
+                                    <th>학년</th>
+                                    <th>작가번호</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody name="writer"></tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
                             <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addWriterModal">추가</button>
                         </div>
                     </div>
+                </div><!-- 3번째 Row 중 오른쪽 col-6 End -->
+            </div><!-- 3번째 Row End -->
 
-                    <hr>
-                    <table id="writerlst" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>이름</th>
-                                <th>소속</th>
-                                <th>학년</th>
-                                <th>작가번호</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody name="writer"></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
+        </div><!-- container End -->
         
 
         <div class="modal fade" id="insertEBookModal" tabindex="-1" aria-labelledby="insertEBookModalLabel" aria-hidden="true">
