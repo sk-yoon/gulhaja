@@ -39,6 +39,7 @@
                                 <th scope="col">학년</th>
                                 <th scope="col">파일명(업로드시 영어로)</th>
                                 <th scope="col">표시여부 (Y/N)</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody name="eBook"></tbody>
@@ -68,11 +69,7 @@
                 </div>
 
                 <div class="col-6">
-                    <div claa="row">
-                        <div id="sample">
-                            
-                        </div>
-                    </div>
+                    <div claa="row"></div>
                     <div class="row">
                         <div class="col-2">
                             <label>이름 검색 :</label>
@@ -117,8 +114,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <!--<form method="post" enctype="multipart/form-data" action="/conf/uploadFile" target="_blank">-->
-                    
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
@@ -160,7 +155,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <input class="btn btn-primary" type="submit" id="addEbook" />
+                        <input class="btn btn-primary" type="submit" data-bs-dismiss="modal" id="addEbook" />
                     </div>
                 </div>
             </div>
@@ -220,6 +215,7 @@
             $(document).on("blur", ".rowColumn", outOfForcus );
             $(document).on("change", ".showYN", changeShowYN );
             $(document).on("click", "button[name='delWriter']", delWriter );
+            $(document).on("click", "button[name='delEBook']", delEbook );
 
             function getConf() {        
                 $.ajax({
@@ -301,6 +297,7 @@
                         }
                         sel += "</select></td>";
                         tableHtml += sel;
+                        tableHtml += "<td><button name='delEBook' class='btn btn-sm btn-danger' value='" + data[i].ID + "'>삭제</button></td>";
                         tableHtml += `</tr>`;
                     }
                 } else {
@@ -433,9 +430,27 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    alert(xhr.responseText);
+                    getEbookList();
                 });
             });
+
+            function delEbook(e) {
+                let ret = confirm("삭제하시겠습니까?");
+                if(ret) {
+                    var data = {id:$(this).val()};
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('DELETE', '/data/eBook');
+                    xhr.setRequestHeader('Content-type', "application/json");
+                    xhr.send(data);
+
+                    xhr.addEventListener('load', function () {
+                        console.log(xhr.responseText);
+                        getEbookList();
+                    });
+                }
+            }
 
             function getWriterList() {
                 $.ajax({
@@ -510,7 +525,6 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    $("#addWriterModal").modal('hide');
                     getWriter();
                 });
             });

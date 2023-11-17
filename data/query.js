@@ -92,6 +92,23 @@ router.put("/eBook", function(req,res) {
     });
 });
 
+router.delete("/eBook", function(req, res) {
+    var id = req.body.id;
+
+    var sql = "DELETE FROM EBOOK WHERE ID = ?";
+    var delSql = maria.format(sql, id);
+
+    maria.query(
+        delSql, function(err, rows, fields) {
+            if (!err) {
+                return res.json("삭제 성공");
+            } else {
+                console.log("err : " + err);
+                return res.json(err);
+            }
+    });
+});
+
 router.get("/writers", function(req,res) {
     maria.query(
         "SELECT * FROM WRITTER",function(err, rows, fields) {
