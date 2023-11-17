@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;400;600;700;800&display=swap');
+
 /***************************
     Page section padding 
 ****************************/
@@ -13,15 +15,9 @@
 .ptb-60 { padding: 60px 0 }
 .ptb-70 { padding: 70px 0 }
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;400;600;700;800&display=swap');
-
 .writeNo {
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 40px;
-}
-
-.rowColumn {
-  color:brown;
 }
 
 .footer {

@@ -199,6 +199,7 @@
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="assets/js/commonUtil.js"></script>
         <script type="text/javascript">
             var g_PageInterval;
             var g_coverScale;
@@ -277,17 +278,17 @@
 
             function drawShowListTable(data) {
                 var tableHtml = "";
-                let attrStr = "class='rowColumn' contenteditable='false' data-default='";
+                
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         tableHtml += "<tr>";
-                        tableHtml += "<td>" + data[i].ID + "</td>";
-                        tableHtml += "<td key='seq' " + attrStr + data[i].SEQ + "'>" + data[i].SEQ + "</td>";
-                        tableHtml += "<td key='title' " + attrStr + data[i].TITLE + "'>" + data[i].TITLE + "</td>";
-                        tableHtml += "<td>" + data[i].WRITER_NO + ' ' + data[i].NAME + "</td>";
-                        tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
-                        tableHtml += "<td>" + data[i].GRADE + "</td>";
-                        tableHtml += "<td>" + data[i].FILENAME + "</td>";
+                        tableHtml += "<td>{0}</td>".format(data[i].ID);
+                        tableHtml += "<td key='seq' class='rowColumn' contenteditable='false' data-default='{0}'>{1}</td>".format(data[i].SEQ, data[i].SEQ);
+                        tableHtml += "<td key='title' class='rowColumn' contenteditable='false' data-default='{0}'>{1}</td>".format(data[i].TITLE, data[i].TITLE);
+                        tableHtml += "<td>{0} {1}호 작가</td>".format(data[i].NAME, data[i].WRITER_NO);
+                        tableHtml += "<td>{0}</td>".format(data[i].AFFILIATION);
+                        tableHtml += "<td>{0}</td>".format(data[i].GRADE);
+                        tableHtml += "<td>{0}</td>".format(data[i].FILENAME);
                         
                         var sel = "<td><select class='form-select showYN' data-default='";
                         if (data[i].SHOW_YN == "Y") {
