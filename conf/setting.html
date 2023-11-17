@@ -122,9 +122,9 @@
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-1"><label for="title" >제목</label></div>
+                                <div class="col-1">제목</div>
                                 <div class="col-5"><input class="form-control" id="eBooktitle" /></div>
-                                <div class="col-1"><label for="seq" >순서</label></div>
+                                <div class="col-1">순서</div>
                                 <div class="col-5"><input class="form-control" id="eBookseq" /></div>
                             </div>
                             <hr>
@@ -489,7 +489,8 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    alert(xhr.responseText);
+                    $("#addWriterModal").modal('hide');
+                    getWriter();
                 });
             });
 
@@ -504,7 +505,7 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    alert(xhr.responseText);
+                    getWriter();
                 });
             }
             
