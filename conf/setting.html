@@ -132,9 +132,7 @@
                             <div class="row">
                                 <div class="col-1">작가</div>
                                 <div class="col-5">
-                                    <label for="eBookWriterList" class="form-label"></label>
-                                    <input class="form-control" list="eBookWriter" id="eBookWriterList" placeholder="작가 검색하세요..." style="float: left; width: 60%;" >
-                                    <datalist id="eBookWriter"></datalist>
+                                    <input class="form-control" style="float: left; width: 60%;" placeholder="작가 검색하세요..." id="eBookWriterName">
                                     <input class="form-control" style="float: left; width: 20%;" disabled id="writerID">
                                     <input class="form-control" style="float: left; width: 20%;" type="button" value="검색" id="getEBookWriter">
                                 </div>
@@ -144,7 +142,17 @@
                                         <input class="form-control" style="float: left; width: 80%;" type="file" name="file" id="eBookFilename">
                                         <input class="form-control" style="float: left; width: 20%;" type="submit" value="업로드">
                                     </form>
-                                    <p id="fileUploadResult">피일을 업로드해주세요</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-5">
+                                    <select class="form-control" style="float: left; width: 60%;" id="writerList"></select>
+                                </div>
+                                <div class="col-1"></div>
+                                <div class="col-5">
+                                    <p id="fileUploadResult">피일을 업로드해주세요.(파일명은 영어로)</p>
                                 </div>
                             </div>
 
@@ -158,34 +166,34 @@
             </div>
         </div>
 
-        <div class="modal fade" id="addWriterModal" tabindex="-1" aria-labelledby="insertEBookModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addWriterModal" tabindex="-1" aria-labelledby="insertWriterModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="insertEBookModalLabel">작가 정보 입력</h5>
+                        <h5 class="modal-title" id="insertWriterModalLabel">작가 정보 입력</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                         
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-1"><label for="name" >이름</label></div>
+                                <div class="col-1">이름</div>
                                 <div class="col-5"><input class="form-control" id="name" /></div>
-                                <div class="col-1"><label for="affilication" >학교</label></div>
+                                <div class="col-1">학교</div>
                                 <div class="col-5"><input class="form-control" id="affilication" /></div>
                             </div>
                             
                             <div class="row">
-                                <div class="col-1"><label for="grade" >학년</label></div>
+                                <div class="col-1">학년</div>
                                 <div class="col-5"><input class="form-control" id="grade" /></div>
-                                <div class="col-1"><label for="writerNo" >작가번호</label></div>
+                                <div class="col-1">작가번호</div>
                                 <div class="col-5"><input class="form-control" id="writerNo" /></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <button class="btn btn-primary" type="button" id="addWriter" >추가</button>
+                        <button class="btn btn-primary" type="button" data-bs-dismiss="modal" id="addWriter" >추가</button>
                     </div>
 
                 </div>
@@ -284,7 +292,7 @@
                         tableHtml += "<td>" + data[i].AFFILIATION + "</td>";
                         tableHtml += "<td>" + data[i].GRADE + "</td>";
                         tableHtml += "<td>" + data[i].FILENAME + "</td>";
-
+                        
                         var sel = "<td><select class='form-select showYN' data-default='";
                         if (data[i].SHOW_YN == "Y") {
                             sel += "Y'><option value='Y'>Y</option><option value='N'>N</option>";
@@ -322,14 +330,14 @@
                     });
             }
 
-            $("#eBookWriterList").on('keydown', function(e){
+            $("#eBookWriterName").on('keydown', function(e){
                 if (e.code == 'Enter'){
                     isEnterPressed = true;
                     getEBookWriter();
                 }
             });
 
-            $("#eBookWriterList").on('keyup', function(e){
+            $("#eBookWriterName").on('keyup', function(e){
                 isEnterPressed = false;
             });
 
@@ -338,34 +346,42 @@
             });
 
             function getEBookWriter(e) {
+                let writerName = $("#eBookWriterName").val().trim();
+                if (writerName == '') {
+                    alert("이름을 입력하세요");
+                    return;
+                }
+
                 $.ajax({
                     type: "GET",
-                    data:{"name": $("#eBookWriterList").val()},
+                    data:{"name": writerName},
                     dataType: "JSON",
                     url: "/data/writer",
                     success: function (ret) {
-                        $("#eBookWriter").empty();
-                        $("#writerID").val('');
+                        $("#writerList").empty();
+
+                        if (ret.length == 0) {
+                            alert('검색 결과가 없습니다.');
+                            return;
+                        }
 
                         if(ret.length == 1) {
                             $("#writerID").val(ret[0].ID);
-                            $("#eBookWriterList").val(ret[0].WRITER_NO + '호 작가 ' + ret[0].NAME);
+                            $("#eBookWriterName").val(ret[0].NAME);
                         } else if(ret.length > 1) {
-                            $("#eBookWriter").empty();
-                            for(let i = 0; i < ret.length; i++) {
-                                let str = "<option value='" + ret[i].NAME + "'>" + ret[i].WRITER_NO + "호 작가" + "</option>";
-                                $("#eBookWriter").append(str);
-                            }
-                            alert('동명 이인이 있습니다.');
-                        } else {
-                            alert('검색 결과가 없습니다.')
+                            $("#writerList").append("<option>작가를 선택하세요</option>");
+                        }
+                        for(let i = 0; i < ret.length; i++) {
+                            let str = "<option value='" + ret[i].ID + "'>" + ret[i].NAME + ' ' + ret[i].WRITER_NO + "호 작가" + "</option>";
+                            $("#writerList").append(str);
                         }
                     },
                 });
             }
 
-            $("#eBookWriterList").change(function(e) {
-                //alert('ㄴㅇㄹ' + $(this).select().text());
+            $("#writerList").change(function(e) {
+                let writeID
+                $("#writerID").val($(this).val());
             });
 
             $("#fileupload").submit(function() {
@@ -390,17 +406,22 @@
             });
 
             $("#addEbook").click(function(e) {
+                let title = $("#eBooktitle").val();
+                let seq = $("#eBookseq").val();
                 let writeId = $("#writerID").val();
-                //if(writeId == null || writeId == '') {
-                //    alert('작가를 검색하세요');
-                //}
                 let filePath = $("#eBookFilename").val();
                 let fileName = filePath.split("\\").pop();
 
+                if(title == null || title == '' || seq == null || seq == '' ||
+                    writeId == null || writeId == '' || fileName == null || fileName == '') {
+                    alert('항목을 전부 입력하세요');
+                    return;
+                }
+
                 var data = {
-                    seq : $("#eBookseq").val(),
+                    seq : seq,
                     title : $("#eBooktitle").val(),
-                    writerId : $("#writerID").val(),
+                    writerId : writeId,
                     filename : fileName
                 }
                 data = JSON.stringify(data);
