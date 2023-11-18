@@ -31,12 +31,12 @@ const renderButton = (page, objName) => {
     
     let next = document.createElement("button");
     next.classList.add("button", "next");
-    next.innerHTML = 'next';
+    next.innerHTML = '&gt;&gt;';
     next.addEventListener("click", goNextPage);
 
     const prev = document.createElement("button");
     prev.classList.add("button", "prev");
-    prev.innerHTML = 'prev';
+    prev.innerHTML = '&lt;&lt;';
     prev.addEventListener("click", goPrevPage);
     
     // 첫 버튼 활성화(class="active")
