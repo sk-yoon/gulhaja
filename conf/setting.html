@@ -52,6 +52,7 @@
             </div>
             <div class="row">
                 <div class="col-11">
+                    <div id="ebookPage">1 2 3 (작업중)</div>
                 </div>
                 <div class="col-1">
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#insertEBookModal">추가</button>
@@ -282,8 +283,10 @@
                     url: "/data/ebooks",
                     success: function (ret) {
                         data = JSON.parse(JSON.stringify(ret));
-                        htmlStr = drawShowListTable(ret);
+                        htmlStr = drawShowListTable(ret[0]);
                         $("#showList").find("tbody").html(htmlStr);
+                        let maxPage = Math.ceil(ret[1][0].CNT / 5);
+                        $("#ebookPage").text("총 {0} 페이지 (작업중)".format(maxPage));
                     },
                 });
             }
@@ -314,7 +317,7 @@
                         tableHtml += `</tr>`;
                     }
                 } else {
-                    alert("No Data");
+                    tableHtml = "<td colspan='9'>검색 결과 없음</td>";
                 }
                 return tableHtml;
             }
