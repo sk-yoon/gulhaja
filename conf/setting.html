@@ -55,7 +55,7 @@
             </div>
             <div class="row">
                 <div class="col-11">
-                    <div id="ebookPage">1 2 3 (작업중)</div>
+                    <div class="buttons" id="eBookPage" curPageNo=1></div>
                 </div>
                 <div class="col-1">
                     <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#insertEBookModal">추가</button>
@@ -111,6 +111,7 @@
                     </div>
                     <div class="row">
                         <div class="col-10">
+                            <div class="buttons" id="writersPage" curPageNo=1></div>
                         </div>
                         <div class="col-2">
                             <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addWriterModal">추가</button>
@@ -223,8 +224,8 @@
 
             $(document).ready(function () {
                 getConf();
-                getEbookList();
-                getWriterList();
+                getEbookList(Number($("#eBookPage").attr("curPageNo")));
+                getWriter(Number($("#writersPage").attr("curPageNo")));
             });
 
             $(document).on("dblclick", ".rowColumn", enableEdit );
@@ -279,20 +280,36 @@
                 }
             });
 
-            function getEbookList() {
+            function getEbookList(pageNo) {
                 $.ajax({
                     type: "GET",
+                    data: {
+                        pageNo : pageNo,
+                        readCount : g_showContent
+                    },
                     dataType: "JSON",
                     url: "/data/ebooks",
                     success: function (ret) {
                         data = JSON.parse(JSON.stringify(ret));
                         htmlStr = drawShowListTable(ret[0]);
                         $("#showList").find("tbody").html(htmlStr);
-                        let maxPage = Math.ceil(ret[1][0].CNT / 5);
-                        $("#ebookPage").text("총 {0} 페이지 (작업중)".format(maxPage));
+
+                        let cnt = ret[1][0].CNT;
+                        if (cnt == 0) {
+                            $("#writersPage").html('');
+                        } else if ( cnt > 0 && Math.ceil(cnt / g_showContent) != g_eBookMaxPage) {
+                            g_eBookMaxPage = Math.ceil(cnt / g_showContent);
+                            renderButton(pageNo, 'eBookPage');
+                        }
                     },
                 });
             }
+
+            function drawPaging(contentCount) {
+                let str = makeButton(".ebookPaging", contentCount);
+                $("#ebookPage").html(str);
+            }
+
 
             function drawShowListTable(data) {
                 var tableHtml = "";
@@ -449,7 +466,7 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    getEbookList();
+                    getEbookList(Number($("#eBookPage").attr("curPageNo")));
                 });
             });
 
@@ -466,20 +483,30 @@
 
                     xhr.addEventListener('load', function () {
                         console.log(xhr.responseText);
-                        getEbookList();
+                        getEbookList(Number($("#eBookPage").attr("curPageNo")));
                     });
                 }
             }
 
-            function getWriterList() {
+            function getWriter(pageNo) {
                 $.ajax({
                     type: "GET",
+                    data:{
+                        pageNo : pageNo,
+                        readCount : g_showContent,
+                        name: $("#writer_name").val()
+                    },
                     dataType: "JSON",
-                    url: "/data/writers",
+                    url: "/data/writer",
                     success: function (ret) {
-                        var htmlStr = drawWritersHtml(ret);
+                        var htmlStr = drawWritersHtml(ret[0]);
                         $("#writerlst").find("tbody").html(htmlStr);
-                        
+
+                        if ( Math.ceil(ret[1][0].CNT / g_showContent) != g_writerMaxPage) {
+                            g_writerMaxPage = Math.ceil(ret[1][0].CNT / g_showContent);
+                            renderButton(pageNo, 'writersPage');
+                        }
+                        console.log(ret[1][0].CNT);
                     },
                 });
             }
@@ -507,26 +534,13 @@
 
             $('#writer_name').on('keyup', function(e){
                 if (e.code == 'Enter'){
-                    getWriter();
+                    getWriter($("#writersPage").attr("curPageNo"));
                 }
             });
 
             $("#searchWriter").click(function() {
-                getWriter();
+                getWriter($("#writersPage").attr("curPageNo"));
             });
-
-            function getWriter() {
-                $.ajax({
-                    type: "GET",
-                    data:{"name": $("#writer_name").val()},
-                    dataType: "JSON",
-                    url: "/data/writer",
-                    success: function (ret) {
-                        var htmlStr = drawWritersHtml(ret);
-                        $("#writerlst").find("tbody").html(htmlStr);
-                    },
-                });
-            }
 
             $("#addWriter").click(function() {
                 var data = {
@@ -544,7 +558,7 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    getWriter();
+                    getWriter($("#writersPage").attr("curPageNo"));
                 });
             });
 
@@ -559,7 +573,7 @@
 
                 xhr.addEventListener('load', function () {
                     console.log(xhr.responseText);
-                    getWriter();
+                    getWriter($("#writersPage").attr("curPageNo"));
                 });
             }
             

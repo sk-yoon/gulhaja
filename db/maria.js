@@ -6,7 +6,8 @@ var dbConn = maria.createConnection({
     port:32191,
     user:'gulhaja',
     password:'1234',
-    database:'display'
+    database:'display',
+    multipleStatements: true
 });
 
 module.exports = dbConn;

@@ -27,21 +27,27 @@ router.get("/showEbooks", function(req, res) {
 });
 
 router.get("/ebooks", function(req, res) {
-    maria.query(
-        "SELECT \
-            B.ID, B.SEQ, B.TITLE, B.FILENAME, B.SHOW_YN, \
-            W.ID as W_ID, W.NAME, W.AFFILIATION, W.GRADE, W.WRITER_NO \
-        FROM EBOOK B \
-            LEFT JOIN WRITTER W on B.WRITER_ID = W.ID \
-        ORDER BY SEQ;",
-    function (err, rows, fields) {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log("err : " + err);
-      res.send(err);
-    }
-  });
+    let pageNo = req.query.pageNo;
+    let readCount = req.query.readCount;
+    let offset = (pageNo - 1) * readCount;
+    let paging = "\r\nLIMIT " + offset + ", " + readCount + ";\r\n";
+
+    let sql1 = "SELECT\r\n \
+                B.ID, B.SEQ, B.TITLE, B.FILENAME, B.SHOW_YN,\r\n \
+                W.ID as W_ID, W.NAME, W.AFFILIATION, W.GRADE, W.WRITER_NO\r\n \
+            FROM EBOOK B\r\n \
+                LEFT JOIN WRITTER W on B.WRITER_ID = W.ID\r\n \
+            ORDER BY SEQ" + paging;
+    let sql2 = "SELECT COUNT(ID) AS CNT FROM EBOOK;";
+
+    maria.query(sql1 + sql2, function (err, results, fields) {
+        if (!err) {
+            res.send(results);
+        } else {
+            console.log("err : " + err);
+            res.send(err);
+        }
+    });
 });
 
 router.post("/eBook", function(req, res) {
@@ -109,26 +115,18 @@ router.delete("/eBook", function(req, res) {
     });
 });
 
-router.get("/writers", function(req,res) {
-    maria.query(
-        "SELECT * FROM WRITTER",function(err, rows, fields) {
-            if (!err) {
-                res.send(rows);
-            } else {
-                console.log("err : " + err);
-                res.send(err);
-            }
-    });
-});
-
 router.get("/writer", function(req,res) {
-    //console.log(req.query.name);
-    var sql = "SELECT * FROM WRITTER WHERE NAME LIKE '%" + req.query.name + "%'";
-    //console.log(sql);
-    maria.query(
-        sql, function(err, rows, fields) {
+    let pageNo = req.query.pageNo;
+    let readCount = req.query.readCount;
+    let offset = (pageNo - 1) * readCount;
+    let paging = "\r\nLIMIT " + offset + ", " + readCount + ";\r\n";
+
+    var sql1 = "SELECT * FROM WRITTER WHERE NAME LIKE '%" + req.query.name + "%' " + paging;
+    var sql2 = "SELECT COUNT(ID) AS CNT FROM WRITTER WHERE NAME LIKE '%" + req.query.name + "%';";
+    
+    maria.query(sql1 + sql2, function(err, results, fields) {
             if (!err) {
-                res.send(rows);
+                res.send(results);
             } else {
                 console.log("err : " + err);
                 res.send(err);
