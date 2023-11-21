@@ -135,7 +135,6 @@ router.get("/writer", function(req,res) {
 });
 
 router.get("/writers", function(req, res) {
-    console.log("writers/data");
     var sql = "SELECT * FROM WRITTER WHERE NAME LIKE '%" + req.query.name + "%'";
 
     maria.query(sql, function(err, results, fields) {
