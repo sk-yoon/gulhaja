@@ -134,6 +134,20 @@ router.get("/writer", function(req,res) {
     });
 });
 
+router.get("/writers", function(req, res) {
+    console.log("writers/data");
+    var sql = "SELECT * FROM WRITTER WHERE NAME LIKE '%" + req.query.name + "%'";
+
+    maria.query(sql, function(err, results, fields) {
+        if (!err) {
+            res.send(results);
+        } else {
+            console.log("err : " + err);
+            res.send(err);
+        }
+    });
+});
+
 router.put("/writer", function(req,res) {
     var body = req.body;
     let sql = "UPDATE WRITTER SET ";
