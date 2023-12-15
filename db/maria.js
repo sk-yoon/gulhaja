@@ -10,4 +10,13 @@ var dbConn = maria.createConnection({
     multipleStatements: true
 });
 
-module.exports = dbConn;
+var localDbConn = maria.createConnection({
+    host : 'localhost',
+    port:3306,
+    user:'gulhaja',
+    password:'1234',
+    database:'display',
+    multipleStatements: true
+});
+
+module.exports = localDbConn;
