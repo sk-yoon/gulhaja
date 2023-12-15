@@ -10,8 +10,8 @@ let intervalInSeconds = 1; // Interval to switch PDFs in seconds
 let currentPdfIndex = 0;
 let watchDog = 0
 
-async function renderCoverPage(pdfUrl, canvas) {
-  let pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+async function renderCoverPage(pdfDoc, canvas) {
+  //let pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
   let firstPage = await pdfDoc.getPage(1);
   let viewport = firstPage.getViewport({ scale: coverScale });
 
@@ -29,8 +29,8 @@ async function renderCoverPage(pdfUrl, canvas) {
   });
 }
 
-async function renderPdfPage(pdfUrl, canvas, pageNumber) {
-  let pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+async function renderPdfPage(pdfDoc, canvas, pageNumber) {
+  //let pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
   let page = await pdfDoc.getPage(pageNumber);
   let viewport = page.getViewport({ scale: pageScale });
 
@@ -58,8 +58,10 @@ async function switchPdf(data) {
   $("#affilication").text(data[currentPdfIndex].AFFILIATION);
   $("#grade").text(data[currentPdfIndex].GRADE);
 
-  await renderCoverPage(pdfUrl, canvas);
+  let coverPdf = await pdfjsLib.getDocument(pdfUrl).promise;
+  await renderCoverPage(coverPdf, canvas);
 }
+
 
 let currentPage = 0;
 async function switchPdfPage(data) {
@@ -81,18 +83,19 @@ async function switchPdfPage(data) {
     }
     await switchPdf(data);
     l_pdfUrl = document.location.origin + "/uploads/" + data[currentPdfIndex].FILENAME;
+    pdfDoc = await pdfjsLib.getDocument(l_pdfUrl).promise;
 
     currentPage = 1;
   } else {
     currentPage++;
   }
 
-  renderPdfPage(l_pdfUrl, l_even_canvas, currentPage); // Display the second page (change '2' to display other pages if needed)
+  renderPdfPage(pdfDoc, l_even_canvas, currentPage); // Display the second page (change '2' to display other pages if needed)
 }
 
 async function showPDF(data) {
-  switchPdfPage(data);
   switchPdf(data);
+  switchPdfPage(data);
 
   setInterval(async () => {
     switchPdfPage(data);
